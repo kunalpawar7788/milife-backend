@@ -1,0 +1,7 @@
+---
+project_name: milife_back
+project_repo_url: git@github.com:bhanuvrat/milife-back.git
+project_repo_remote: origin
+repo_version: master
+pg_gis: False
+sass_with_django_compressor: False
