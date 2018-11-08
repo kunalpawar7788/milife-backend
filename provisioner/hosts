@@ -14,10 +14,10 @@ use_letsencrypt=False
 pg_db=milife_back
 pg_user=vagrant
 pg_password=vagrant
-domain_name=vagrant.milife_back.com
+domain_name=vagrant.mi-life.co.uk
 
 [dev]
-dev.milife_back.com
+dev.mi-life.co.uk
 
 [dev:vars]
 vm=0
@@ -30,11 +30,11 @@ use_letsencrypt=True
 letsencrypt_email=lifeforcefitness@anuvrat.in
 django_requirements_file=requirements.txt
 django_settings="settings.production"
-domain_name=dev.milife_back.com
+domain_name=dev.mi-life.co.uk
 
 
 [qa]
-qa.milife_back.com
+qa.mi-life.co.uk
 
 [qa:vars]
 vm=0
@@ -47,10 +47,10 @@ use_letsencrypt=True
 letsencrypt_email=lifeforcefitness@anuvrat.in
 django_requirements_file=requirements.txt
 django_settings="settings.production"
-domain_name=qa.milife_back.com
+domain_name=qa.mi-life.co.uk
 
 [production]
-milife_back.com
+mi-life.co.uk
 
 [production:vars]
 vm=0
@@ -63,4 +63,4 @@ use_letsencrypt=True
 letsencrypt_email=lifeforcefitness@anuvrat.in
 django_requirements_file=requirements.txt
 django_settings="settings.production"
-domain_name=milife_back.com
+domain_name=mi-life.co.uk
