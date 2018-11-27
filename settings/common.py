@@ -85,6 +85,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
+        'milife_back.permissions.AllowOptionsAuthentication',
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_THROTTLE_CLASSES': (
@@ -154,6 +155,7 @@ SITE_ID = 'current'
 FRONTEND_URLS = {
     'home': '/',
     'password-confirm': '/reset-password/{token}/',
+    'verify-user-email': '/verify-user-email/{token}/',
 }
 
 # MIDDLEWARE CONFIGURATION
