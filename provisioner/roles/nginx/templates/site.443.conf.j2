@@ -46,8 +46,15 @@ server {
         alias {{ project_path }}/_docs_html/;
     }
 
-    # Setup named location for Django requests and handle proxy details
+    root /home/ubuntu/prod/milife-front/index.html;
+
     location / {
+      try_files $uri $uri/ /index.html;
+    }
+
+
+    # Setup named location for Django requests and handle proxy details
+    location ~ ^/(api|admin)/ {
         uwsgi_pass unix:///tmp/django-{{ domain_name }}-uwsgi.sock;
         include /etc/nginx/uwsgi_params;
 

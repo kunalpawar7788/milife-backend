@@ -55,6 +55,7 @@ mi-life.co.uk
 [production:vars]
 vm=0
 deploy_environment=prod
+ansible_user=ubuntu
 user=ubuntu
 project_namespace={{ project_name }}-{{ deploy_environment }}
 project_path=/home/ubuntu/{{ deploy_environment }}/milife-back
