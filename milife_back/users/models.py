@@ -32,6 +32,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, UUIDModel, PermissionsMixin):
     first_name = models.CharField(_('First Name'), max_length=120, blank=True)
     last_name = models.CharField(_('Last Name'), max_length=120, blank=True)
+    number = models.CharField(_('Number'), max_length=120, blank=True)
     # https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#citext-fields
     email = CIEmailField(_('email address'), unique=True, db_index=True)
     is_staff = models.BooleanField(_('staff status'), default=False,
@@ -41,6 +42,7 @@ class User(AbstractBaseUser, UUIDModel, PermissionsMixin):
                                     help_text='Designates whether this user should be treated as '
                                               'active. Unselect this instead of deleting accounts.')
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    email_verified = models.BooleanField(_('email verified'), default=False)
 
     USERNAME_FIELD = 'email'
     objects = UserManager()

@@ -15,3 +15,4 @@ def send_password_reset_mail(user, template_name='email/password_reset_mail.tpl'
                      recipient_list=[user.email],
                      template_name=template_name,
                      context=ctx)
+

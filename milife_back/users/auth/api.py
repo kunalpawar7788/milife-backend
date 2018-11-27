@@ -22,6 +22,8 @@ class AuthViewSet(MultipleSerializerMixin, viewsets.GenericViewSet):
         'password_change': serializers.PasswordChangeSerializer,
         'password_reset': serializers.PasswordResetSerializer,
         'password_reset_confirm': serializers.PasswordResetConfirmSerializer,
+        'verify_user_email': serializers.VerifyUserEmailSerializer,
+        'resend_user_email_verification_mail': serializers.VerifyUserEmailSerializer,
     }
 
     @action(methods=['POST', ], detail=False)
@@ -38,6 +40,7 @@ class AuthViewSet(MultipleSerializerMixin, viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
         user = user_services.create_user_account(**serializer.validated_data)
         data = serializers.AuthUserSerializer(user).data
+        services.send_password_reset_mail(user, template_name='email/verify_user_email_mail.tpl')
         return response.Created(data)
 
     @action(methods=['POST', ], detail=False)
@@ -73,3 +76,20 @@ class AuthViewSet(MultipleSerializerMixin, viewsets.GenericViewSet):
         user.set_password(serializer.validated_data['new_password'])
         user.save()
         return response.NoContent()
+
+    @action(methods=['POST', ], detail=False)
+    def verify_user_email(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = tokens.get_user_for_password_reset_token(serializer.validated_data['token'])
+        user.email_verified=True
+        user.save()
+        return response.NoContent()
+
+    @action(methods=['POST', ], detail=False, permission_classes=[IsAuthenticated, ])
+    def resend_user_email_verification_mail(self, request):
+        # serializer = self.get_serializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # user = user_services.get_user_by_email(serializer.data['email'])
+        services.send_password_reset_mail(request.user, template_name='email/verify_user_email_mail.tpl')
+        return response.Ok({'message': 'Further instructions will be sent to the email if it exists'})

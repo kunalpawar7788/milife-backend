@@ -20,8 +20,11 @@ class LoginSerializer(serializers.Serializer):
 
 
 class RegisterSerializer(serializers.Serializer):
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True)
+    number = serializers.CharField(required=False)
 
     def validate_email(self, value):
         user = user_services.get_user_by_email(email=value)
@@ -65,6 +68,13 @@ class PasswordResetSerializer(serializers.Serializer):
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
+    token = serializers.CharField(required=True)
+
+    def validate_new_password(self, value):
+        password_validation.validate_password(value)
+        return value
+
+class VerifyUserEmailSerializer(serializers.Serializer):
     token = serializers.CharField(required=True)
 
     def validate_new_password(self, value):
