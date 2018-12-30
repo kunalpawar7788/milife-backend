@@ -30,19 +30,41 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, UUIDModel, PermissionsMixin):
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('N', 'I would rather not say')
+    )
+    WEIGHT_UNIT_CHOICES = {
+        ('kg', 'kilogram'),
+        ('lb', 'pounds'),
+        ('st', 'stones'),
+    }
+    HEIGHT_UNIT_CHOICES = {
+        ('cm', 'centimeters'),
+        ('ft', 'feet and inches'),
+    }
     first_name = models.CharField(_('First Name'), max_length=120, blank=True)
     last_name = models.CharField(_('Last Name'), max_length=120, blank=True)
     number = models.CharField(_('Number'), max_length=120, blank=True)
     # https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#citext-fields
     email = CIEmailField(_('email address'), unique=True, db_index=True)
     is_staff = models.BooleanField(_('staff status'), default=False,
-                                   help_text='Designates whether the user can log into this admin site.')
+                                   help_text='Designates whether the user can log into the admin site.')
 
     is_active = models.BooleanField('active', default=True,
                                     help_text='Designates whether this user should be treated as '
                                               'active. Unselect this instead of deleting accounts.')
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     email_verified = models.BooleanField(_('email verified'), default=False)
+
+    gender = models.CharField(_('Gender'), max_length=4, choices=GENDER_CHOICES, blank=True)
+    height_cm = models.DecimalField(_('Height'), max_digits=5, decimal_places=2, blank=True, null=True)
+    height_unit = models.CharField(_('Height unit preference'), max_length=4, choices=HEIGHT_UNIT_CHOICES, blank=True)
+    weight_kg = models.DecimalField(_('Weight'), max_digits=5, decimal_places=2, blank=True, null=True)
+    weight_unit = models.CharField(_('Weight unit preference'), max_length=4, choices=WEIGHT_UNIT_CHOICES, blank=True)
+    date_of_birth = models.DateField(_('Date Of Birth'), null=True)
+
 
     USERNAME_FIELD = 'email'
     objects = UserManager()

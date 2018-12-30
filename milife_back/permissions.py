@@ -5,4 +5,4 @@ class AllowOptionsAuthentication(IsAuthenticated):
         if request.method == 'OPTIONS':
             return True
         return request.user and request.user.is_authenticated
-    
+
