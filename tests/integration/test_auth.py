@@ -17,7 +17,10 @@ def test_user_registration(client):
     url = reverse('auth-register')
     credentials = {
         'email': 'test@test.com',
-        'password': 'localhost'
+        'password': 'localhost',
+        'first_name': 'testy',
+        'last_name': 'lasty',
+        'number': '9282938392'
     }
     response = client.json.post(url, json.dumps(credentials))
     assert response.status_code == 201

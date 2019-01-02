@@ -4,12 +4,26 @@ from django.utils.translation import ugettext_lazy as _
 from milife_back.base.models import TimeStampedUUIDModel
 from versatileimagefield.fields import VersatileImageField
 
+
 class Programme(TimeStampedUUIDModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="weight_user")
-    coach = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="weight_coach")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="programme_user")
+    coach = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="programme_coach")
     name = models.CharField(_("Programme Name"), max_length=120)
     start_date = models.DateField()
     end_date = models.DateField()
+
+
+class Session(TimeStampedUUIDModel):
+    """
+    A programme shall have many sessions.
+    """
+    programme = models.ForeignKey(
+        Programme,
+        on_delete=models.CASCADE,
+        related_name="programme_schedule")
+    weekday = models.CharField(_("Weekday"), max_length=20)
+    start_time = models.TimeField()
+    deleted = models.BooleanField(_('Deleted'), default=False)
 
 
 class Weight(TimeStampedUUIDModel):
@@ -19,18 +33,18 @@ class Weight(TimeStampedUUIDModel):
 
 
 class Message(TimeStampedUUIDModel):
-    MESSAGE_TYPES=['Weekly Commentry', '']
-
+    MESSAGE_TYPES=[('weekly_commentry', 'Weekly Commentry'), ]
     recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="message_recipient")
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="message_sender")
-    kind = models.ChoiceField(_("Message type"), choices=MESSAGE_TYPES)
+    kind = models.CharField(_("Message type"), max_length=120, choices=MESSAGE_TYPES)
     read = models.BooleanField(_('Has been read by the recipient'), default=False)
+    deleted = models.BooleanField(_('Deleted'), default=False)
 
 
 class Checkin(TimeStampedUUIDModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="weight_user")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="checkin_user")
     body_water = models.FloatField(_("Body Water"))
-    proteins = model.FloatField(_("Proteins"))
+    proteins = models.FloatField(_("Proteins"))
     minerals = models.FloatField(_("Minerals"))
     body_fat = models.FloatField(_("Body fat"))
     body_fat_percentage = models.FloatField(_("Body fat percentage"))
@@ -71,10 +85,10 @@ class Checkin(TimeStampedUUIDModel):
 
 
 class MealPlan(TimeStampedUUIDModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="weight_user")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="mealplan_user")
     name = models.CharField(_("Name of Meal"), max_length=120)
-    carbohydrate = models.IntegerField(_("Carbohydrate"), min_value=0, max_value=100)
-    fat = models.IntegerField(_("Fat"), min_value=0, max_value=100)
-    protein = models.IntegerField(_("Protein"), min_value=0, max_value=100)
+    carbohydrate = models.IntegerField(_("Carbohydrate"))
+    fat = models.IntegerField(_("Fat"))
+    protein = models.IntegerField(_("Protein"))
 
 

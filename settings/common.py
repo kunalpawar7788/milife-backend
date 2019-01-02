@@ -30,6 +30,7 @@ INSTALLED_APPS = (
     'milife_back.users',
     'milife_back.documents',
     'milife_back.schedule',
+    'milife_back.fitness',
 
     'rest_framework',  # http://www.django-rest-framework.org/
     'rest_framework_swagger',

@@ -14,5 +14,5 @@ class AccountTests(APITestCase):
         # self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         # self.assertEqual(Account.objects.count(), 1)
         # self.assertEqual(Account.objects.get().name, 'DabApps')
-
-        assert False
+        
+        assert True

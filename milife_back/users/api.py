@@ -1,8 +1,9 @@
 # Third Party Stuff
-from rest_framework import viewsets
+from rest_framework import viewsets, filters, permissions
 
 # milife-back Stuff
 from milife_back.base import response
+from milife_back.permissions import UsersPermission
 
 from . import models, serializers
 
@@ -28,16 +29,11 @@ class CurrentUserViewSet(viewsets.GenericViewSet):
         serializer.save()
         return response.Ok(serializer.data)
 
-class UsersViewSet(viewsets.GenericViewSet):
+
+class UsersViewSet(viewsets.ModelViewSet):
     """powers admin interface."""
     serializer_class = serializers.UserSerializer
     queryset = models.User.objects.filter(is_active=True)
-
-    def list(self, request):
-        serializer = self.get_serializer(self.queryset, many=True)
-        return response.Ok(serializer.data)
-
-    def retrieve(self, request, pk):
-        instance = self.queryset.get(id=pk)
-        serializer = self.get_serializer(instance)
-        return response.Ok(serializer.data)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('first_name', 'last_name')
+    permission_classes = (UsersPermission, )

@@ -44,6 +44,7 @@ class User(AbstractBaseUser, UUIDModel, PermissionsMixin):
         ('cm', 'centimeters'),
         ('ft', 'feet and inches'),
     }
+    accuniq_id = models.CharField(_("Accuniq Id"), max_length=100)
     first_name = models.CharField(_('First Name'), max_length=120, blank=True)
     last_name = models.CharField(_('Last Name'), max_length=120, blank=True)
     number = models.CharField(_('Number'), max_length=120, blank=True)
