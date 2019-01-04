@@ -2,7 +2,7 @@
 from django.contrib.auth import logout
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
 # milife-back Stuff
 from milife_back.base import response
@@ -24,6 +24,7 @@ class AuthViewSet(MultipleSerializerMixin, viewsets.GenericViewSet):
         'password_reset_confirm': serializers.PasswordResetConfirmSerializer,
         'verify_user_email': serializers.VerifyUserEmailSerializer,
         'resend_user_email_verification_mail': serializers.VerifyUserEmailSerializer,
+        'invite_user': serializers.InvitationSerializer,
     }
 
     @action(methods=['POST', ], detail=False)
@@ -93,3 +94,14 @@ class AuthViewSet(MultipleSerializerMixin, viewsets.GenericViewSet):
         # user = user_services.get_user_by_email(serializer.data['email'])
         services.send_password_reset_mail(request.user, template_name='email/verify_user_email_mail.tpl')
         return response.Ok({'message': 'Further instructions will be sent to the email if it exists'})
+
+    @action(methods=['POST', ], detail=False, permission_classes=[IsAdminUser, ])
+    def invite_user(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = user_services.invite_user(**serializer.validated_data)
+        data = serializers.AuthUserSerializer(user).data
+        services.send_invitation_mail(user, template_name='email/invitation_mail.tpl')
+        return response.Created(data)
+
+

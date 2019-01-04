@@ -19,6 +19,12 @@ def create_user_account(email, password, first_name="", last_name="", number="",
     )
     return user
 
+def invite_user(email, first_name, last_name):
+    user = get_user_model().objects.create(
+        email=email, first_name=first_name, last_name=last_name
+    )
+    return user
+
 
 def get_user_by_email(email: str):
     return get_user_model().objects.filter(email__iexact=email).first()
