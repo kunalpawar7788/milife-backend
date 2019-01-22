@@ -4,7 +4,7 @@ from rest_framework_nested import routers
 
 # milife-back Stuff
 from milife_back.base.api.routers import SingletonRouter
-from milife_back.users.api import CurrentUserViewSet, UsersViewSet
+from milife_back.users.api import CurrentUserViewSet, UsersViewSet, UserCountViewSet
 from milife_back.users.auth.api import AuthViewSet
 from milife_back.documents.api import DocumentsViewSet
 from milife_back.schedule.api import ScheduleViewSet
@@ -17,7 +17,7 @@ singleton_router = SingletonRouter()
 # Register all the django rest framework viewsets below.
 default_router.register('auth', AuthViewSet, base_name='auth')
 singleton_router.register('me', CurrentUserViewSet, base_name='me')
-
+default_router.register('counts', UserCountViewSet, base_name="usercounts")
 
 simple_router = routers.SimpleRouter(trailing_slash=False)
 simple_router.register('users', UsersViewSet, base_name='users')

@@ -48,6 +48,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'email',
                   'is_active', 'is_staff', 'email_verified',
                   'weight_kg', 'height_cm', 'height_unit',
-                  'weight_unit', 'date_of_birth'
+                  'weight_unit', 'date_of_birth', 'image',
         ]
 

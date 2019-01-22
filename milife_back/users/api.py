@@ -1,5 +1,6 @@
 # Third Party Stuff
 from rest_framework import viewsets, filters, permissions
+from rest_framework.decorators import action
 
 # milife-back Stuff
 from milife_back.base import response
@@ -7,6 +8,7 @@ from milife_back.permissions import UsersPermission
 
 from . import models, serializers
 
+from django.db.models import Count
 
 class CurrentUserViewSet(viewsets.GenericViewSet):
     """Powers the /me endpoint."""
@@ -37,3 +39,16 @@ class UsersViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('first_name', 'last_name')
     permission_classes = (UsersPermission, )
+
+
+class UserCountViewSet(viewsets.GenericViewSet):
+    permission_classes =(permissions.AllowAny,)
+
+    @action(methods=['GET',], detail=False)
+    def email_verification_status(self, request):
+        data = dict(models.User.objects.filter(is_staff=False)\
+                    .values_list('email_verified')\
+                    .annotate(Count('email_verified',))\
+                    .order_by())
+        response_d = {'waiting': data[False], 'active': data[True]}
+        return response.Ok(response_d)

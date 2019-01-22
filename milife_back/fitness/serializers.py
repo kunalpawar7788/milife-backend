@@ -26,7 +26,7 @@ class MealPlanSerializer(serializers.ModelSerializer):
         model = models.MealPlan
         fields = '__all__'
 
-class SessionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=models.Session
-        exclude = ('programme', )
+# class SessionSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model=models.Session
+#         exclude = ('programme', )

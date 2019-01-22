@@ -13,17 +13,45 @@ class Programme(TimeStampedUUIDModel):
     end_date = models.DateField()
 
 
-class Session(TimeStampedUUIDModel):
+# class Session(TimeStampedUUIDModel):
+#     """
+#     A programme shall have many sessions.
+#     """
+#     programme = models.ForeignKey(
+#         Programme,
+#         on_delete=models.CASCADE,
+#         related_name="programme_schedule")
+#     weekday = models.CharField(_("Weekday"), max_length=20)
+#     start_time = models.TimeField()
+#     deleted = models.BooleanField(_('Deleted'), default=False)
+
+
+class Schedule(TimeStampedUUIDModel):
     """
     A programme shall have many sessions.
     """
+    STATUS_CHOICES = (
+        ("scheduled", 'scheduled'),
+        ('availed', 'availed'),
+        ('cancelled', 'cancelled'),
+        ('banked', 'banked'),
+    )
     programme = models.ForeignKey(
         Programme,
         on_delete=models.CASCADE,
         related_name="programme_schedule")
-    weekday = models.CharField(_("Weekday"), max_length=20)
-    start_time = models.TimeField()
-    deleted = models.BooleanField(_('Deleted'), default=False)
+    coach = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="sechudle_coach")
+
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    name = models.CharField(_("Session name"), max_length=120)
+    status = models.CharField(_("State of the session"), max_length=20)
+
+
+class Holiday(TimeStampedUUIDModel):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="schedule_user")
+    start = models.DateField()
+    end = models.DateField()
 
 
 class Weight(TimeStampedUUIDModel):

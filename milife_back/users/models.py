@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 # milife-back Stuff
-from milife_back.base.models import UUIDModel
+from milife_back.base.models import UUIDModel, ImageMixin
 
 
 class UserManager(BaseUserManager):
@@ -29,7 +29,7 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, True, True, **extra_fields)
 
 
-class User(AbstractBaseUser, UUIDModel, PermissionsMixin):
+class User(AbstractBaseUser, UUIDModel, PermissionsMixin, ImageMixin):
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
@@ -65,7 +65,6 @@ class User(AbstractBaseUser, UUIDModel, PermissionsMixin):
     weight_kg = models.DecimalField(_('Weight'), max_digits=5, decimal_places=2, blank=True, null=True)
     weight_unit = models.CharField(_('Weight unit preference'), max_length=4, choices=WEIGHT_UNIT_CHOICES, blank=True)
     date_of_birth = models.DateField(_('Date Of Birth'), null=True)
-
 
     USERNAME_FIELD = 'email'
     objects = UserManager()

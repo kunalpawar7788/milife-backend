@@ -17,7 +17,7 @@ class NestedQuerysetMixin(object):
             return self.queryset.filter(user=str(user_pk))
         return self.queryset
 
-    
+
 class WeightViewSet(NestedQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.WeightSerializer
     queryset = models.Weight.objects.all()
@@ -39,5 +39,7 @@ class MealPlanViewSet(NestedQuerysetMixin, viewsets.ModelViewSet):
     permission_classes = ()
 
 
-class SessionViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.SessionSerializer
+# class SessionViewSet(viewsets.ModelViewSet):
+#     serializer_class = serializers.SessionSerializer
+
+
