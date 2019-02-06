@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from milife_back.base.models import TimeStampedUUIDModel
 from versatileimagefield.fields import VersatileImageField
 
+from django.contrib.postgres.fields import HStoreField
 
 class Programme(TimeStampedUUIDModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="programme_user")
@@ -71,45 +72,8 @@ class Message(TimeStampedUUIDModel):
 
 class Checkin(TimeStampedUUIDModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="checkin_user")
-    body_water = models.FloatField(_("Body Water"))
-    proteins = models.FloatField(_("Proteins"))
-    minerals = models.FloatField(_("Minerals"))
-    body_fat = models.FloatField(_("Body fat"))
-    body_fat_percentage = models.FloatField(_("Body fat percentage"))
-    muscle_mass = models.FloatField(_("Muscle Mass"))
-    muscle_mass_percentage = models.FloatField(_("muscle mass percentage"))
-    visceral_fat_mass = models.FloatField(_("visteral fat mass"))
-    body_type=models.FloatField(_("Body Type"))
-    biological_age = models.IntegerField(_("Biological Age"))
-    waist = models.FloatField(_("Waist"))
-    hips = models.FloatField(_("Hips"))
-    chest = models.FloatField(_("Chest"))
-    shoulders = models.FloatField(_("Shoulders"))
-    left_arm = models.FloatField(_("Left Arm"))
-    right_arm = models.FloatField(_("Right Arm"))
-    left_leg = models.FloatField(_("Left Leg"))
-    right_leg = models.FloatField(_("Right Leg"))
-    waist = models.FloatField(_("Waist"))
-    waist = models.FloatField(_("Waist"))
-    waist = models.FloatField(_("Waist"))
-    lean_mass_trunk = models.FloatField(_("lean_mass_trunk"))
-    lean_mass_left_arm = models.FloatField(_("Lean Mass Left Arm"))
-    lean_mass_right_arm = models.FloatField(_("Lean Mass Right Arm"))
-    lean_mass_left_leg = models.FloatField(_("Lean Mass Left Leg"))
-    lean_mass_right_leg = models.FloatField(_("Lean Mass Right Leg"))
-
-    # bmi to be calculated
-
-    # waist_hip_ratio calculated
-
-    systolic_blood_pressure = models.FloatField(_("Systolic Blood Pressure"))
-    diastolic_blood_pressure = models.FloatField(_("Diatolic Blood Pressure"))
-    blood_sugar = models.FloatField(_("Blood Sugar"))
-    vo2max = models.FloatField(_("VO2Max"))
-    resting_heart_rate = models.FloatField(_("Resting Heart Rate"))
-    photo_front = VersatileImageField(_("Front Photo"), upload_to="checkin_images/")
-    photo_side = VersatileImageField(_("Side Photo"), upload_to="checkin_images/")
-    # Body Type chart
+    date_of_checkin = models.DateField()
+    accuniq_data = HStoreField()
 
 
 class MealPlan(TimeStampedUUIDModel):

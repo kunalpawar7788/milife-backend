@@ -24,6 +24,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.postgres',
+
     # 'django.contrib.humanize',  # Useful template tags
 
     'milife_back.base',
