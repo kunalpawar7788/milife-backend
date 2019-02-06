@@ -41,8 +41,8 @@ class User(AbstractBaseUser, UUIDModel, PermissionsMixin, ImageMixin):
         ('st', 'stones'),
     }
     HEIGHT_UNIT_CHOICES = {
-        ('cm', 'centimeters'),
-        ('ft', 'feet and inches'),
+        ('metric', 'metric'),
+        ('imperial','imperial'),
     }
     accuniq_id = models.CharField(_("Accuniq Id"), max_length=100)
     first_name = models.CharField(_('First Name'), max_length=120, blank=True)
@@ -61,9 +61,9 @@ class User(AbstractBaseUser, UUIDModel, PermissionsMixin, ImageMixin):
 
     gender = models.CharField(_('Gender'), max_length=4, choices=GENDER_CHOICES, blank=True)
     height_cm = models.DecimalField(_('Height'), max_digits=5, decimal_places=2, blank=True, null=True)
-    height_unit = models.CharField(_('Height unit preference'), max_length=4, choices=HEIGHT_UNIT_CHOICES, blank=True)
+    height_unit = models.CharField(_('Height unit preference'), max_length=10, choices=HEIGHT_UNIT_CHOICES, blank=True)
     weight_kg = models.DecimalField(_('Weight'), max_digits=5, decimal_places=2, blank=True, null=True)
-    weight_unit = models.CharField(_('Weight unit preference'), max_length=4, choices=WEIGHT_UNIT_CHOICES, blank=True)
+    weight_unit = models.CharField(_('Weight unit preference'), max_length=10, choices=WEIGHT_UNIT_CHOICES, blank=True)
     date_of_birth = models.DateField(_('Date Of Birth'), null=True)
 
     USERNAME_FIELD = 'email'
