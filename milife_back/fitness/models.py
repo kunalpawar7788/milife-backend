@@ -73,7 +73,23 @@ class Message(TimeStampedUUIDModel):
 class Checkin(TimeStampedUUIDModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="checkin_user")
     date_of_checkin = models.DateField()
-    accuniq_data = HStoreField()
+    accuniq_timestamp = models.DateTimeField(null=True)
+    accuniq_data = HStoreField(default=dict)
+
+    photo_front_profile = VersatileImageField("front_profile", upload_to="checkin_images", blank=True, null=True)
+    photo_side_profile = VersatileImageField("side_profile", upload_to="checkin_images", blank=True, null=True)
+
+    waist = models.DecimalField(_("waist"), max_digits=5, decimal_places=2, default=0)
+    hips = models.DecimalField(_("hips"), max_digits=5, decimal_places=2, default=0)
+    chest = models.DecimalField(_("chest"), max_digits=5, decimal_places=2, default=0)
+    shoulders = models.DecimalField(_("shoulders"), max_digits=5, decimal_places=2, default=0)
+    left_arm = models.DecimalField(_("left_arm"), max_digits=5, decimal_places=2, default=0)
+    right_arm = models.DecimalField(_("right_arm"), max_digits=5, decimal_places=2, default=0)
+    left_leg = models.DecimalField(_("left_leg"), max_digits=5, decimal_places=2, default=0)
+    right_leg = models.DecimalField(_("right_leg"), max_digits=5, decimal_places=2, default=0)
+
+    class Meta:
+        unique_together=(('user', 'date_of_checkin'),)
 
 
 class MealPlan(TimeStampedUUIDModel):

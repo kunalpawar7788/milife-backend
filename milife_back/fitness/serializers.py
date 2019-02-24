@@ -30,3 +30,16 @@ class MealPlanSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model=models.Session
 #         exclude = ('programme', )
+
+class CheckinSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        return models.Checkin.objects.create(
+            user = self.context['user'],
+            **validated_data,
+
+        )
+
+    class Meta:
+        model = models.Checkin
+        exclude = ('accuniq_timestamp', 'accuniq_data', 'user')

@@ -35,15 +35,15 @@ class User(AbstractBaseUser, UUIDModel, PermissionsMixin, ImageMixin):
         ('F', 'Female'),
         ('N', 'I would rather not say')
     )
-    WEIGHT_UNIT_CHOICES = {
+    WEIGHT_UNIT_CHOICES = (
         ('kg', 'kilogram'),
         ('lb', 'pounds'),
-        ('st', 'stones'),
-    }
-    HEIGHT_UNIT_CHOICES = {
+        ('st', 'stones')
+    )
+    HEIGHT_UNIT_CHOICES = (
         ('metric', 'metric'),
         ('imperial','imperial'),
-    }
+    )
     accuniq_id = models.CharField(_("Accuniq Id"), max_length=100)
     first_name = models.CharField(_('First Name'), max_length=120, blank=True)
     last_name = models.CharField(_('Last Name'), max_length=120, blank=True)

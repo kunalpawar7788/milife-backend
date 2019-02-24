@@ -8,7 +8,8 @@ from milife_back.users.api import CurrentUserViewSet, UsersViewSet, UserCountVie
 from milife_back.users.auth.api import AuthViewSet
 from milife_back.documents.api import DocumentsViewSet
 from milife_back.schedule.api import ScheduleViewSet
-from milife_back.fitness.api import WeightViewSet
+from milife_back.fitness.api import WeightViewSet, CheckinViewSet
+
 
 default_router = DefaultRouter()
 singleton_router = SingletonRouter()
@@ -27,9 +28,12 @@ nested_user_router = routers.NestedSimpleRouter(simple_router, r'users', lookup=
 nested_user_router.register('documents', DocumentsViewSet, base_name='user_documents')
 nested_user_router.register('schedule', ScheduleViewSet, base_name='user_schedule')
 nested_user_router.register('weight', WeightViewSet, base_name='user_weight')
+nested_user_router.register('checkin', CheckinViewSet, base_name='checkin')
+
 
 default_router.register('schedule', ScheduleViewSet, base_name='schedule')
 default_router.register('weight', WeightViewSet, base_name='weight')
+
 
 # nested_simple_router = router.NestedSimpleRouter(trailing_slash=False)
 # default_router.register('users/{pk}/documents', DocumentsViewSet, base_name="user_documents")6
