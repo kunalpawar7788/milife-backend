@@ -50,6 +50,7 @@ class CheckinViewSet(NestedQuerysetMixin, viewsets.ModelViewSet):
     queryset = models.Checkin.objects.all()
     lookup_field = "date_of_checkin"
 
+
     def get_serializer_context(self, ):
         super_context = super().get_serializer_context()
         user_pk = self.kwargs['user_pk']

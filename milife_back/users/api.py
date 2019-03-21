@@ -50,5 +50,5 @@ class UserCountViewSet(viewsets.GenericViewSet):
                     .values_list('email_verified')\
                     .annotate(Count('email_verified',))\
                     .order_by())
-        response_d = {'waiting': data[False], 'active': data[True]}
+        response_d = {'waiting': data.get(False, 0), 'active': data.get(True, 0)}
         return response.Ok(response_d)
