@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 
+from django.contrib.auth import get_user_model
+
 from milife_back.base import response, mixins
 from . import models, serializers
 from milife_back.users.models import User
@@ -17,19 +19,15 @@ class DocumentsViewSet(mixins.NestedQuerysetMixin, viewsets.ModelViewSet):
     search_fields = ('name', 'notes')
     filter_backends = (filters.SearchFilter,)
 
-    @permission_classes((IsAdminUser,))
-    def create(self, request, user_pk=None):
-        user = User.objects.get(id=user_pk)
-        data = {
-            'user': uuid.UUID(str(user.id)),
-            'document': request.data['document'],
-            'uploaded_by': uuid.UUID(str(request.user.id)),
-            'name': request.data['name']
-        }
-        serializer = self.serializer_class(data=data)
-        if serializer.is_valid():
-            serializer.save()
-        else:
-            print(serializer.errors)
-        return response.Created()
 
+    def get_serializer_context(self, ):
+        super_context = super().get_serializer_context()
+        user_pk = self.kwargs['user_pk']
+        client = get_user_model().objects.get(id=user_pk)
+
+        context = {
+            'user': client,
+            'uploaded_by': self.request.user,
+        }
+        super_context.update(context)
+        return super_context
