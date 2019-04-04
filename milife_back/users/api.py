@@ -40,6 +40,14 @@ class UsersViewSet(viewsets.ModelViewSet):
     search_fields = ('first_name', 'last_name')
     permission_classes = (UsersPermission, )
 
+class CoachesViewSet(viewsets.ModelViewSet):
+    """powers admin interface."""
+    serializer_class = serializers.UserSerializer
+    queryset = models.User.objects.filter(is_active=True, is_staff=True)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('first_name', 'last_name')
+    permission_classes = (UsersPermission, )
+
 
 class UserCountViewSet(viewsets.GenericViewSet):
     permission_classes =(permissions.AllowAny,)

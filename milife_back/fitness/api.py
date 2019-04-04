@@ -11,31 +11,51 @@ from django.contrib.auth import get_user_model
 import uuid
 
 
-class NestedQuerysetMixin(object):
+class NestedUserQuerysetMixin(object):
     def get_queryset(self):
         user_pk = self.kwargs.get('user_pk')
         if user_pk:
             return self.queryset.filter(user=str(user_pk))
         return self.queryset
 
+class NestedProgrammeQuerysetMixin(object):
+    def get_queryset(self):
+        pk = self.kwargs.get('programme_pk')
+        if pk:
+            return self.queryset.filter(programme=str(pk))
+        return self.queryset
 
-class WeightViewSet(NestedQuerysetMixin, viewsets.ModelViewSet):
+
+class WeightViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.WeightSerializer
     queryset = models.Weight.objects.all()
     permission_classes = (NestedUserPermission,)
 
 
-class ProgrammeViewSet(NestedQuerysetMixin, viewsets.ModelViewSet):
+class ProgrammeViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.ProgrammeSerializer
+    queryset = models.Programme.objects.all()
     permission_classes = ()
 
 
-class MessageViewSet(NestedQuerysetMixin, viewsets.ModelViewSet):
+class HolidayViewSet(NestedProgrammeQuerysetMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.HolidaySerializer
+    queryset = models.Holiday.objects.all()
+    permission_classes = ()
+
+
+class SessionLedgerViewSet(NestedProgrammeQuerysetMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.SessionLedgerSerializer
+    queryset = models.SessionLedger.objects.all()
+    permission_classes = ()
+
+
+class MessageViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.MessageSerializer
     permission_classes = ()
 
 
-class MealPlanViewSet(NestedQuerysetMixin, viewsets.ModelViewSet):
+class MealPlanViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.MealPlanSerializer
     permission_classes = ()
 
@@ -44,7 +64,7 @@ class MealPlanViewSet(NestedQuerysetMixin, viewsets.ModelViewSet):
 #     serializer_class = serializers.SessionSerializer
 
 
-class CheckinViewSet(NestedQuerysetMixin, viewsets.ModelViewSet):
+class CheckinViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     parsers = (parsers.FileUploadParser, )
     serializer_class = serializers.CheckinSerializer
     queryset = models.Checkin.objects.all()

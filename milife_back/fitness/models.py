@@ -12,47 +12,25 @@ class Programme(TimeStampedUUIDModel):
     name = models.CharField(_("Programme Name"), max_length=120)
     start_date = models.DateField()
     end_date = models.DateField()
-
-
-# class Session(TimeStampedUUIDModel):
-#     """
-#     A programme shall have many sessions.
-#     """
-#     programme = models.ForeignKey(
-#         Programme,
-#         on_delete=models.CASCADE,
-#         related_name="programme_schedule")
-#     weekday = models.CharField(_("Weekday"), max_length=20)
-#     start_time = models.TimeField()
-#     deleted = models.BooleanField(_('Deleted'), default=False)
-
-
-class Schedule(TimeStampedUUIDModel):
-    """
-    A programme shall have many sessions.
-    """
-    STATUS_CHOICES = (
-        ("scheduled", 'scheduled'),
-        ('availed', 'availed'),
-        ('cancelled', 'cancelled'),
-        ('banked', 'banked'),
-    )
-    programme = models.ForeignKey(
-        Programme,
-        on_delete=models.CASCADE,
-        related_name="programme_schedule")
-    coach = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="sechudle_coach")
-
-    start = models.DateTimeField()
-    end = models.DateTimeField()
-    name = models.CharField(_("Session name"), max_length=120)
-    status = models.CharField(_("State of the session"), max_length=20)
+    sessions = HStoreField(default=dict)
 
 
 class Holiday(TimeStampedUUIDModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="schedule_user")
+    programme = models.ForeignKey(Programme, on_delete=models.PROTECT, related_name='holiday_programme')
     start = models.DateField()
     end = models.DateField()
+    comment= models.CharField(_("Comment"), max_length=200, blank=True)
+
+
+class SessionLedger(TimeStampedUUIDModel):
+    TYPES = (
+        ('C', 'CREDITED'),
+        ('D', 'DEBITED')
+    )
+    programme = models.ForeignKey(Programme, on_delete=models.PROTECT, related_name='sessionledger_programme')
+    start = models.DateTimeField()
+    comment = models.CharField(_("Comment"), max_length=200, blank=True)
+    kind = models.CharField(_("credit/debit"), max_length=4, choices=TYPES)
 
 
 class Weight(TimeStampedUUIDModel):

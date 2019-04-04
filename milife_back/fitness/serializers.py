@@ -43,3 +43,17 @@ class CheckinSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Checkin
         exclude = ('accuniq_timestamp', 'accuniq_data', 'user')
+
+
+class HolidaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Holiday
+        fields = '__all__'
+
+
+class SessionLedgerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SessionLedger
+        fields = '__all__'
+
+
