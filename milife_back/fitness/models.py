@@ -13,6 +13,7 @@ class Programme(TimeStampedUUIDModel):
     start_date = models.DateField()
     end_date = models.DateField()
     sessions = HStoreField(default=dict)
+    active = models.BooleanField(_('Active'), default=True)
 
 
 class Holiday(TimeStampedUUIDModel):

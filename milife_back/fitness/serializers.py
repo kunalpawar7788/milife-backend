@@ -2,6 +2,8 @@ from rest_framework import serializers
 from . import models
 
 class ProgrammeSerializer(serializers.ModelSerializer):
+    sessions = serializers.JSONField()
+
     class Meta:
         model = models.Programme
         fields = '__all__'
