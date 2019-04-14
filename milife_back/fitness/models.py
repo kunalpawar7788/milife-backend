@@ -17,6 +17,10 @@ class Programme(TimeStampedUUIDModel):
 
 
 class Holiday(TimeStampedUUIDModel):
+    EFFECT_ON_SCHEDULE_CHOICES = (
+        ('extend_programme', 'Extend Programme'),
+        ('bank_sessions', 'Bank Sessions'),
+    )
     programme = models.ForeignKey(Programme, on_delete=models.PROTECT, related_name='holiday_programme')
     start = models.DateField()
     end = models.DateField()
@@ -34,8 +38,13 @@ class SessionLedger(TimeStampedUUIDModel):
     kind = models.CharField(_("credit/debit"), max_length=4, choices=TYPES)
 
 
-class Weight(TimeStampedUUIDModel):
+class TargetWeight(TimeStampedUUIDModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="weight_user")
+    target_weight = models.FloatField(_("Weight"))
+
+
+class Weight(TimeStampedUUIDModel):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="target_weight_user")
     weight = models.FloatField(_("Weight"))
     measured_on = models.DateField(_("Measured on"))
 

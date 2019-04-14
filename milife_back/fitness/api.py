@@ -32,6 +32,12 @@ class WeightViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     permission_classes = (NestedUserPermission,)
 
 
+class TargetWeightViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.TargetWeightSerializer
+    queryset = models.TargetWeight.objects.all()
+    permission_classes = (NestedUserPermission,)
+
+
 class ProgrammeViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.ProgrammeSerializer
     queryset = models.Programme.objects.all()

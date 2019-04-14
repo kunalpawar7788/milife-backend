@@ -18,6 +18,12 @@ class WeightSerializer(serializers.ModelSerializer):
         model = models.Weight
         exclude = ('user',)
 
+class TargetWeightSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.TargetWeight
+        fields = "__all__"
+
+
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Message

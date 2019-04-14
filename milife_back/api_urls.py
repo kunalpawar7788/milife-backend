@@ -8,7 +8,7 @@ from milife_back.users.api import CurrentUserViewSet, UsersViewSet, UserCountVie
 from milife_back.users.auth.api import AuthViewSet
 from milife_back.documents.api import DocumentsViewSet
 from milife_back.schedule.api import ScheduleViewSet
-from milife_back.fitness.api import ProgrammeViewSet, WeightViewSet, CheckinViewSet, HolidayViewSet, SessionLedgerViewSet
+from milife_back.fitness.api import ProgrammeViewSet, WeightViewSet, CheckinViewSet, HolidayViewSet, SessionLedgerViewSet, TargetWeightViewSet
 
 
 
@@ -32,6 +32,7 @@ nested_user_router.register('documents', DocumentsViewSet, base_name='user_docum
 nested_user_router.register('programmes', ProgrammeViewSet, base_name='user_programmes')
 nested_user_router.register('schedule', ScheduleViewSet, base_name='user_schedule')
 nested_user_router.register('weight', WeightViewSet, base_name='user_weight')
+nested_user_router.register('target-weight', TargetWeightViewSet, base_name='user_weight')
 nested_user_router.register('checkin', CheckinViewSet, base_name='user_checkin')
 
 nested_programme_router2 = routers.NestedSimpleRouter(simple_router, r'programmes', lookup='programme')
@@ -51,7 +52,7 @@ default_router.register('weight', WeightViewSet, base_name='weight')
 # default_router.register('users/{pk}/documents', DocumentsViewSet, base_name="user_documents")6
 # simple_router.register('users', UsersViewSet, base_name="users")
 # default_router.register('documents', DocumentsViewSet, base_name="documents")
-
+nested_user_router.register('weight', WeightViewSet, base_name='user_weight')
 
 
 # Combine urls from both default and singleton routers and expose as
