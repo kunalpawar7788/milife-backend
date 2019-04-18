@@ -31,11 +31,31 @@ class WeightViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     queryset = models.Weight.objects.all()
     permission_classes = (NestedUserPermission,)
 
+    def get_serializer_context(self, ):
+        super_context = super().get_serializer_context()
+        user_pk = self.kwargs['user_pk']
+        user = get_user_model().objects.get(id=user_pk)
+        context = {
+            'user_ref': user,
+        }
+        super_context.update(context)
+        return super_context
+
 
 class TargetWeightViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.TargetWeightSerializer
     queryset = models.TargetWeight.objects.all()
     permission_classes = (NestedUserPermission,)
+
+    def get_serializer_context(self, ):
+        super_context = super().get_serializer_context()
+        user_pk = self.kwargs['user_pk']
+        user = get_user_model().objects.get(id=user_pk)
+        context = {
+            'user_ref': user
+        }
+        super_context.update(context)
+        return super_context
 
 
 class ProgrammeViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):

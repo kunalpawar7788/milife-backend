@@ -11,7 +11,7 @@ class ProgrammeSerializer(serializers.ModelSerializer):
 class WeightSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return models.Weight.objects.create(
-            user = self.context['request'].user,
+            user = self.context['user_ref'],
             **validated_data
         )
     class Meta:
@@ -19,9 +19,15 @@ class WeightSerializer(serializers.ModelSerializer):
         exclude = ('user',)
 
 class TargetWeightSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        return models.TargetWeight.objects.create(
+            user = self.context['user_ref'],
+            **validated_data
+        )
+
     class Meta:
         model = models.TargetWeight
-        fields = "__all__"
+        exclude = ('user',)
 
 
 class MessageSerializer(serializers.ModelSerializer):

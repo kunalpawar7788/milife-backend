@@ -11,7 +11,6 @@ from milife_back.schedule.api import ScheduleViewSet
 from milife_back.fitness.api import ProgrammeViewSet, WeightViewSet, CheckinViewSet, HolidayViewSet, SessionLedgerViewSet, TargetWeightViewSet
 
 
-
 default_router = DefaultRouter()
 singleton_router = SingletonRouter()
 
@@ -32,7 +31,7 @@ nested_user_router.register('documents', DocumentsViewSet, base_name='user_docum
 nested_user_router.register('programmes', ProgrammeViewSet, base_name='user_programmes')
 nested_user_router.register('schedule', ScheduleViewSet, base_name='user_schedule')
 nested_user_router.register('weight', WeightViewSet, base_name='user_weight')
-nested_user_router.register('target-weight', TargetWeightViewSet, base_name='user_weight')
+nested_user_router.register('target-weights', TargetWeightViewSet, base_name='user_weight')
 nested_user_router.register('checkin', CheckinViewSet, base_name='user_checkin')
 
 nested_programme_router2 = routers.NestedSimpleRouter(simple_router, r'programmes', lookup='programme')

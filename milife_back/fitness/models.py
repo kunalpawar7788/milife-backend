@@ -5,6 +5,7 @@ from milife_back.base.models import TimeStampedUUIDModel
 from versatileimagefield.fields import VersatileImageField
 
 from django.contrib.postgres.fields import HStoreField
+from django.utils import timezone
 
 class Programme(TimeStampedUUIDModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="programme_user")
@@ -40,13 +41,16 @@ class SessionLedger(TimeStampedUUIDModel):
 
 class TargetWeight(TimeStampedUUIDModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="weight_user")
-    target_weight = models.FloatField(_("Weight"))
+    start_date = models.DateField(_("start_date"), default=timezone.now)
+    target_date = models.DateField(_("end_date"), default=timezone.now)
+    start_weight = models.FloatField(_("Start Weight"), default=0)
+    target_weight = models.FloatField(_("Target Weight"), default=0)
 
 
 class Weight(TimeStampedUUIDModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="target_weight_user")
     weight = models.FloatField(_("Weight"))
-    measured_on = models.DateField(_("Measured on"))
+    measured_on = models.DateField(_("Measured on"), default=timezone.now)
 
 
 class Message(TimeStampedUUIDModel):

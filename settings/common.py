@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'corsheaders',   # https://github.com/ottoyiu/django-cors-headers/
     'raven.contrib.django.raven_compat',
     'mail_templated',  # https://github.com/artemrizhov/django-mail-templated
+    'django_filters', # https://github.com/carltongibson/django-filter
 )
 
 # INSTALLED APPS CONFIGURATION

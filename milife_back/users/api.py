@@ -1,6 +1,7 @@
 # Third Party Stuff
 from rest_framework import viewsets, filters, permissions
 from rest_framework.decorators import action
+from django_filters.rest_framework import DjangoFilterBackend
 
 # milife-back Stuff
 from milife_back.base import response
@@ -9,6 +10,7 @@ from milife_back.permissions import UsersPermission
 from . import models, serializers
 
 from django.db.models import Count
+
 
 class CurrentUserViewSet(viewsets.GenericViewSet):
     """Powers the /me endpoint."""
@@ -36,9 +38,11 @@ class UsersViewSet(viewsets.ModelViewSet):
     """powers admin interface."""
     serializer_class = serializers.UserSerializer
     queryset = models.User.objects.filter(is_active=True)
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     search_fields = ('first_name', 'last_name')
     permission_classes = (UsersPermission, )
+    filterset_fields = ('email_verified',)
+
 
 class CoachesViewSet(viewsets.ModelViewSet):
     """powers admin interface."""
