@@ -82,12 +82,12 @@ class VerifyUserEmailSerializer(serializers.Serializer):
         return value
 
 class InvitationSerializer(serializers.Serializer):
-    first_name = serializers.CharField(required=True)
-    last_name = serializers.CharField(required=True)
+    # first_name = serializers.CharField(required=True)
+    # last_name = serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
 
     def validate_email(self, value):
         user = user_services.get_user_by_email(email=value)
-        if user:
-            raise serializers.ValidationError("Email is already taken.")
+        # if user:
+        #     raise serializers.ValidationError("Email is already taken.")
         return UserManager.normalize_email(value)
