@@ -78,7 +78,19 @@ class SessionLedgerViewSet(NestedProgrammeQuerysetMixin, viewsets.ModelViewSet):
 
 class MessageViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.MessageSerializer
-    permission_classes = ()
+    queryset = models.Message.objects.all()
+    permission_classes = (NestedUserPermission,)
+
+    def get_serializer_context(self, ):
+        super_context = super().get_serializer_context()
+        user_pk = self.kwargs['user_pk']
+        user = get_user_model().objects.get(id=user_pk)
+        context = {
+            'recipient': user,
+            "sender": self.request.user
+        }
+        super_context.update(context)
+        return super_context
 
 
 class MealPlanViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
