@@ -31,9 +31,16 @@ class TargetWeightSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        return models.Message.objects.create(
+            sender = self.context['sender'],
+            recipient = self.context['recipient'],
+            **validated_data
+        )
+
     class Meta:
         model = models.Message
-        fields = '__all__'
+        fields = ('kind', 'content', 'read', 'deleted')
 
 class MealPlanSerializer(serializers.ModelSerializer):
     class Meta:
