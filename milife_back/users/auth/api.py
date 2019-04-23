@@ -99,9 +99,10 @@ class AuthViewSet(MultipleSerializerMixin, viewsets.GenericViewSet):
     def invite_user(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = user_services.invite_user(**serializer.validated_data)
+        # user = user_services.invite_user(**serializer.validated_data)
+        user = user_services.get_user_by_email(**serializer.validated_data)
         data = serializers.AuthUserSerializer(user).data
         services.send_invitation_mail(user, template_name='email/invitation_mail.tpl')
+        user.invited = True
+        user.save()
         return response.Created(data)
-
-
