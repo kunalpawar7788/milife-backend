@@ -54,12 +54,13 @@ class Weight(TimeStampedUUIDModel):
 
 
 class Message(TimeStampedUUIDModel):
-    MESSAGE_TYPES=[('weekly_commentry', 'Weekly Commentry'), ]
+    MESSAGE_TYPES=[('weekly-commentry', 'Weekly Commentry'), ('misc', 'MISCELLANEOUS')]
     recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="message_recipient")
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="message_sender")
     kind = models.CharField(_("Message type"), max_length=120, choices=MESSAGE_TYPES)
     read = models.BooleanField(_('Has been read by the recipient'), default=False)
     deleted = models.BooleanField(_('Deleted'), default=False)
+    content = models.TextField(_("Content"), blank=True)
 
 
 class Checkin(TimeStampedUUIDModel):
