@@ -5,6 +5,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+from versatileimagefield.fields import VersatileImageField
+
 # milife-back Stuff
 from milife_back.base.models import UUIDModel, ImageMixin
 
@@ -36,9 +38,8 @@ class User(AbstractBaseUser, UUIDModel, PermissionsMixin, ImageMixin):
         ('N', 'I would rather not say')
     )
     WEIGHT_UNIT_CHOICES = (
-        ('kg', 'kilogram'),
-        ('lb', 'pounds'),
-        ('st', 'stones')
+        ('metric', 'metric'),
+        ('imperial','imperial'),
     )
     HEIGHT_UNIT_CHOICES = (
         ('metric', 'metric'),
@@ -58,6 +59,7 @@ class User(AbstractBaseUser, UUIDModel, PermissionsMixin, ImageMixin):
                                               'active. Unselect this instead of deleting accounts.')
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
     email_verified = models.BooleanField(_('email verified'), default=False)
+    invited = models.BooleanField(_("Invited"), default=False)
 
     gender = models.CharField(_('Gender'), max_length=4, choices=GENDER_CHOICES, blank=True)
     height_cm = models.DecimalField(_('Height'), max_digits=5, decimal_places=2, blank=True, null=True)
