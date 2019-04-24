@@ -2,7 +2,7 @@ from rest_framework import serializers
 from . import models
 
 class ProgrammeSerializer(serializers.ModelSerializer):
-    sessions = serializers.JSONField()
+    sessions = serializers.JSONField(required=False)
 
     class Meta:
         model = models.Programme
