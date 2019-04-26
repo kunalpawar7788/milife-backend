@@ -43,14 +43,16 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = ('kind', 'content', 'read', 'deleted')
 
 class MealPlanSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        return models.MealPlan.objects.create(
+            user = self.context['user_ref'],
+            **validated_data,
+        )
+
     class Meta:
         model = models.MealPlan
-        fields = '__all__'
+        exclude = ('user', )
 
-# class SessionSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model=models.Session
-#         exclude = ('programme', )
 
 class CheckinSerializer(serializers.ModelSerializer):
 
@@ -58,7 +60,6 @@ class CheckinSerializer(serializers.ModelSerializer):
         return models.Checkin.objects.create(
             user = self.context['user'],
             **validated_data,
-
         )
 
     class Meta:

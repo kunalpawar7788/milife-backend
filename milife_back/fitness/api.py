@@ -95,11 +95,18 @@ class MessageViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
 
 class MealPlanViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.MealPlanSerializer
-    permission_classes = ()
+    queryset = models.MealPlan.objects.all()
+    permission_classes = (NestedUserPermission, )
 
-
-# class SessionViewSet(viewsets.ModelViewSet):
-#     serializer_class = serializers.SessionSerializer
+    def get_serializer_context(self, ):
+        super_context = super().get_serializer_context()
+        user_pk = self.kwargs['user_pk']
+        user = get_user_model().objects.get(id=user_pk)
+        context = {
+            'user_ref': user,
+        }
+        super_context.update(context)
+        return super_context
 
 
 class CheckinViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):

@@ -5,6 +5,8 @@ from milife_back.base.models import TimeStampedUUIDModel
 from versatileimagefield.fields import VersatileImageField
 
 from django.contrib.postgres.fields import HStoreField
+from django.contrib.postgres.fields import JSONField
+
 from django.utils import timezone
 
 class Programme(TimeStampedUUIDModel):
@@ -86,10 +88,8 @@ class Checkin(TimeStampedUUIDModel):
 
 
 class MealPlan(TimeStampedUUIDModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="mealplan_user")
-    name = models.CharField(_("Name of Meal"), max_length=120)
-    carbohydrate = models.IntegerField(_("Carbohydrate"))
-    fat = models.IntegerField(_("Fat"))
-    protein = models.IntegerField(_("Protein"))
-
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="mealplan_user")
+    calorie = models.IntegerField(_("Calorie"), default=0)
+    daily_breakup = JSONField(default=dict)
+    meal_breakup = JSONField(default=list)
 
