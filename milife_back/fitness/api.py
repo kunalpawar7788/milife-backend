@@ -1,6 +1,6 @@
 from rest_framework import viewsets, parsers, filters
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 
 from milife_back.base import response, mixins
@@ -140,3 +140,30 @@ class CheckinViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     #         print(serializer.errors)
     #     return response.Created()
 
+
+class ClientDashboardViewSet(viewsets.GenericViewSet):
+    serializer_class = serializers.ClientDashboardSerializer
+    permission_classes = (AllowAny, )
+
+    def retrieve(self, *args, **kwargs):
+        print(args, kwargs)
+        user_pk = self.kwargs['pk']
+        client = get_user_model().objects.get(id=user_pk)
+        weight_queryset = models.Weight.objects.filter(user=client)
+        #import ipdb; ipdb.set_trace();
+        try:
+            meal_plan = models.MealPlan.objects.get(user=client)
+        except models.MealPlan.DoesNotExist:
+            calorie = 0
+        else:
+            calorie = meal_plan.calorie
+
+        context = {
+            "weight_log": list(weight_queryset),
+            "target_weight": models.TargetWeight.objects.filter(user=client),
+            "progress_report": models.Checkin.objects.filter(user=client),
+            "calorie": calorie,
+            "messages_count": models.Message.objects.filter(recipient=client, read=False).count()
+        }
+        serializer = self.serializer_class(instance=context);
+        return response.Ok(serializer.data)
