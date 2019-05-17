@@ -158,12 +158,18 @@ class ClientDashboardViewSet(viewsets.GenericViewSet):
         else:
             calorie = meal_plan.calorie
 
+        try:
+            programme = models.Programme.objects.filter(user=client).order_by('-start_date')[:1][0]
+        except IndexError:
+            programme = None
+
         context = {
             "weight_log": list(weight_queryset),
             "target_weight": models.TargetWeight.objects.filter(user=client),
-            "progress_report": models.Checkin.objects.filter(user=client),
+            "progress_report": models.Checkin.objects.filter(user=client).order_by('-date_of_checkin')[:2],
             "calorie": calorie,
-            "messages_count": models.Message.objects.filter(recipient=client, read=False).count()
+            "messages_count": models.Message.objects.filter(recipient=client, read=False).count(),
+            "programme": programme
         }
         serializer = self.serializer_class(instance=context);
         return response.Ok(serializer.data)

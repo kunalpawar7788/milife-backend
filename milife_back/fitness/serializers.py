@@ -92,17 +92,38 @@ class ProgressReportSerializer(serializers.ModelSerializer):
 
 class ProgressReportSummarySerializer(serializers.ModelSerializer):
     body_fat = serializers.SerializerMethodField()
+    percentage_body_fat = serializers.SerializerMethodField()
+    percentage_muscle_mass = serializers.SerializerMethodField()
     muscle_mass = serializers.SerializerMethodField()
+    month = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Checkin
-        fields = ('body_fat', 'muscle_mass', 'date_of_checkin',  )
+        fields = ('body_fat',
+                  'muscle_mass',
+                  'date_of_checkin',
+                  'percentage_body_fat',
+                  'percentage_muscle_mass',
+                  'month',
+        )
+
+    def _percentage(self, n, d):
+        return round(100*(float(n)/float(d)), 1)
 
     def get_body_fat(self, obj):
-        return obj.accuniq_data['mbf_quantity']
+        return float(obj.accuniq_data['mbf_quantity'])/10
 
     def get_muscle_mass(self, obj):
-        return obj.accuniq_data['muscle_quantity']
+        return float(obj.accuniq_data['muscle_quantity'])/10
+
+    def get_percentage_body_fat(self, obj):
+        return self._percentage(obj.accuniq_data['mbf_quantity'], obj.accuniq_data['weight'])
+
+    def get_percentage_muscle_mass(self, obj):
+        return self._percentage(obj.accuniq_data['muscle_quantity'], obj.accuniq_data['weight'])
+
+    def get_month(self, obj):
+        return obj.date_of_checkin.strftime("%b %y")
 
 
 class ClientDashboardSerializer(serializers.Serializer):
@@ -112,3 +133,4 @@ class ClientDashboardSerializer(serializers.Serializer):
     # progress_report = ProgressReportSerializer(many=True)
     messages_count = serializers.IntegerField()
     progress_report = ProgressReportSummarySerializer(many=True)
+    programme = ProgrammeSerializer()

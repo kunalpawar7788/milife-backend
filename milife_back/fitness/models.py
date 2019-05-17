@@ -43,9 +43,7 @@ class SessionLedger(TimeStampedUUIDModel):
 
 class TargetWeight(TimeStampedUUIDModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="weight_user")
-    start_date = models.DateField(_("start_date"), default=timezone.now)
     target_date = models.DateField(_("end_date"), default=timezone.now)
-    start_weight = models.FloatField(_("Start Weight"), default=0)
     target_weight = models.FloatField(_("Target Weight"), default=0)
 
 
