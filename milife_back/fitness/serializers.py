@@ -134,3 +134,82 @@ class ClientDashboardSerializer(serializers.Serializer):
     messages_count = serializers.IntegerField()
     progress_report = ProgressReportSummarySerializer(many=True)
     programme = ProgrammeSerializer()
+
+
+class ProgressReportDetailSerializer(serializers.ModelSerializer):
+    body_fat = serializers.SerializerMethodField()
+    percentage_body_fat = serializers.SerializerMethodField()
+    percentage_muscle_mass = serializers.SerializerMethodField()
+    muscle_mass = serializers.SerializerMethodField()
+    visceral_fat_mass  = serializers.SerializerMethodField()
+    body_type = serializers.SerializerMethodField()
+    biological_age = serializers.SerializerMethodField()
+    body_mass_index = serializers.SerializerMethodField()
+    waist_hip_ratio = serializers.SerializerMethodField()
+
+    month = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Checkin
+        fields = ('body_fat',
+                  'muscle_mass',
+                  'date_of_checkin',
+                  'percentage_body_fat',
+                  'percentage_muscle_mass',
+                  'month',
+                  'visceral_fat_mass',
+                  'body_type',
+                  'biological_age',
+                  'body_mass_index',
+                  'waist_hip_ratio',
+
+
+                  'systolic_blood_pressure',
+                  'diastolic_blood_pressure',
+                  'blood_sugar',
+                  'vo2_max',
+                  'resting_heart_rate',
+                  'waist',
+                  'hips',
+                  'chest',
+                  'shoulders',
+                  'left_arm',
+                  'right_arm',
+                  'left_leg',
+                  'right_leg',
+                  'photo_front_profile',
+                  'photo_side_profile',
+        )
+
+    def _percentage(self, n, d):
+        return round(100*(float(n)/float(d)), 1)
+
+    def get_body_fat(self, obj):
+        return float(obj.accuniq_data['mbf_quantity'])/10
+
+    def get_visceral_fat_mass(self, obj):
+        return float(obj.accuniq_data['vfa'])/10
+
+    def get_body_type(self, obj):
+        return int(obj.accuniq_data['fat_type'])
+
+    def get_biological_age(self, obj):
+        return obj.accuniq_data['body_age']
+
+    def get_body_mass_index(self, obj):
+        return float(obj.accuniq_data['bmi'])/10
+
+    def get_waist_hip_ratio(self, obj):
+        return float(obj.accuniq_data['whr_rate'])/10
+
+    def get_muscle_mass(self, obj):
+        return float(obj.accuniq_data['muscle_quantity'])/10
+
+    def get_percentage_body_fat(self, obj):
+        return self._percentage(obj.accuniq_data['mbf_quantity'], obj.accuniq_data['weight'])
+
+    def get_percentage_muscle_mass(self, obj):
+        return self._percentage(obj.accuniq_data['muscle_quantity'], obj.accuniq_data['weight'])
+
+    def get_month(self, obj):
+        return obj.date_of_checkin.strftime("%b %y")

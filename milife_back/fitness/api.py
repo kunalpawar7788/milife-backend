@@ -146,11 +146,9 @@ class ClientDashboardViewSet(viewsets.GenericViewSet):
     permission_classes = (AllowAny, )
 
     def retrieve(self, *args, **kwargs):
-        print(args, kwargs)
         user_pk = self.kwargs['pk']
         client = get_user_model().objects.get(id=user_pk)
         weight_queryset = models.Weight.objects.filter(user=client)
-        #import ipdb; ipdb.set_trace();
         try:
             meal_plan = models.MealPlan.objects.get(user=client)
         except models.MealPlan.DoesNotExist:
@@ -171,5 +169,35 @@ class ClientDashboardViewSet(viewsets.GenericViewSet):
             "messages_count": models.Message.objects.filter(recipient=client, read=False).count(),
             "programme": programme
         }
-        serializer = self.serializer_class(instance=context);
+        serializer = self.serializer_class(instance=context)
         return response.Ok(serializer.data)
+
+
+# class ProgressReportViewSet(viewsets.GenericViewSet):
+#     serializer_class = serializers.ProgressReportDetailSerializer
+#     permission_classes = (AllowAny, )
+
+#     def retrieve(self, *args, **kwargs):
+#         user_pk = self.kwargs['pk']
+#         client = get_user_model().objects.get(id=user_pk)
+#         progress_reports = models.Checkin.objects.filter(user=user)
+
+#         serializer = self.serializer_class(progress_reports, many=True)
+#         return response.Ok(serializer.data)
+
+class ProgressReportViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.ProgressReportDetailSerializer
+    queryset = models.Checkin.objects.all()
+    permission_classes = (NestedUserPermission, )
+    lookup_field = "date_of_checkin"
+
+
+    def get_serializer_context(self, ):
+        super_context = super().get_serializer_context()
+        user_pk = self.kwargs['user_pk']
+        client = get_user_model().objects.get(id=user_pk)
+        context = {
+            'user': client
+        }
+        super_context.update(context)
+        return super_context

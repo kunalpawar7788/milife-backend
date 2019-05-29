@@ -65,7 +65,10 @@ class Message(TimeStampedUUIDModel):
 
 class Checkin(TimeStampedUUIDModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="checkin_user")
+    # use date_of_checkin for all calculation.
     date_of_checkin = models.DateField()
+
+    # this timestapm is only used to refrain from upserting existing values.
     accuniq_timestamp = models.DateTimeField(null=True)
     accuniq_data = HStoreField(default=dict)
 
@@ -80,6 +83,12 @@ class Checkin(TimeStampedUUIDModel):
     right_arm = models.DecimalField(_("right_arm"), max_digits=5, decimal_places=2, default=0)
     left_leg = models.DecimalField(_("left_leg"), max_digits=5, decimal_places=2, default=0)
     right_leg = models.DecimalField(_("right_leg"), max_digits=5, decimal_places=2, default=0)
+
+    systolic_blood_pressure = models.DecimalField(_("systolic_blood_pressure"), max_digits=5, decimal_places=2, default=0)
+    diastolic_blood_pressure = models.DecimalField(_("diastolic_blood_pressure"), max_digits=5, decimal_places=2, default=0)
+    blood_sugar = models.DecimalField(_("blood_sugar"), max_digits=5, decimal_places=2, default=0)
+    vo2_max = models.DecimalField(_("vo2_max"), max_digits=5, decimal_places=2, default=0)
+    resting_heart_rate = models.IntegerField(_("resting heart rate"), default=0)
 
     class Meta:
         unique_together=(('user', 'date_of_checkin'),)
