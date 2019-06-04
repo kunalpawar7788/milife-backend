@@ -65,14 +65,15 @@ class Message(TimeStampedUUIDModel):
 
 class Checkin(TimeStampedUUIDModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="checkin_user", blank=True, null=True)
-    # use date_of_checkin for all calculation.
-    date_of_checkin = models.DateField()
     accuniq_id = models.CharField(_("Accuniq Id"), max_length=21, default="")
+
+    # use date_of_checkin for all calculation.
+    date_of_checkin = models.DateField(_("Date of checkin"), blank=True, null=True)
 
     # this timestapm is only used to refrain from upserting existing values.
     accuniq_timestamp = models.DateTimeField(null=True)
-    accuniq_data = HStoreField(default=dict)
 
+    accuniq_data = HStoreField(default=dict)
     photo_front_profile = VersatileImageField("front_profile", upload_to="checkin_images", blank=True, null=True)
     photo_side_profile = VersatileImageField("side_profile", upload_to="checkin_images", blank=True, null=True)
 
