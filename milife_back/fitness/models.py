@@ -64,9 +64,10 @@ class Message(TimeStampedUUIDModel):
 
 
 class Checkin(TimeStampedUUIDModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="checkin_user")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="checkin_user", blank=True, null=True)
     # use date_of_checkin for all calculation.
     date_of_checkin = models.DateField()
+    accuniq_id = models.CharField(_("Accuniq Id"), max_length=21, default="")
 
     # this timestapm is only used to refrain from upserting existing values.
     accuniq_timestamp = models.DateTimeField(null=True)
@@ -91,7 +92,7 @@ class Checkin(TimeStampedUUIDModel):
     resting_heart_rate = models.IntegerField(_("resting heart rate"), default=0)
 
     class Meta:
-        unique_together=(('user', 'date_of_checkin'),)
+        unique_together=(('accuniq_id', 'accuniq_timestamp'),)
 
 
 class MealPlan(TimeStampedUUIDModel):
@@ -99,4 +100,9 @@ class MealPlan(TimeStampedUUIDModel):
     calorie = models.IntegerField(_("Calorie"), default=0)
     daily_breakup = JSONField(default=dict)
     meal_breakup = JSONField(default=list)
+
+
+class AccuniqData(TimeStampedUUIDModel):
+    csvfile = models.FileField(_("accuniq csvfile"), upload_to="accuniq")
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="accuniqdata_user")
 

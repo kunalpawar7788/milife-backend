@@ -213,3 +213,16 @@ class ProgressReportDetailSerializer(serializers.ModelSerializer):
 
     def get_month(self, obj):
         return obj.date_of_checkin.strftime("%b %y")
+
+
+class  AccuniqDataSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        return models.AccuniqData.objects.create(
+            uploaded_by = self.context['uploaded_by'],
+            **validated_data,
+        )
+
+    class Meta:
+        model = models.AccuniqData
+        exclude = ('uploaded_by',)

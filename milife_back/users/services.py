@@ -28,3 +28,7 @@ def invite_user(email, first_name, last_name):
 
 def get_user_by_email(email: str):
     return get_user_model().objects.filter(email__iexact=email).first()
+
+def create_accuniq_id(first_name, last_name):
+    last_name = f" {last_name}" if last_name.strip() != "" else ""
+    return f"{first_name.upper()}{last_name.upper()}{'*'*20}"[:20]

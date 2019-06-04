@@ -12,6 +12,7 @@ from milife_back.fitness.api import (
     ProgrammeViewSet, WeightViewSet, CheckinViewSet, HolidayViewSet,
     SessionLedgerViewSet, TargetWeightViewSet, MessageViewSet,
     MealPlanViewSet, ClientDashboardViewSet, ProgressReportViewSet,
+    AccuniqDataViewSet,
 )
 
 default_router = DefaultRouter()
@@ -23,6 +24,7 @@ default_router.register('auth', AuthViewSet, base_name='auth')
 singleton_router.register('me', CurrentUserViewSet, base_name='me')
 default_router.register('counts', UserCountViewSet, base_name="usercounts")
 default_router.register('dashboard', ClientDashboardViewSet, base_name="dashboard")
+default_router.register('accuniq-data', AccuniqDataViewSet, base_name="accuniq_data" )
 
 simple_router = routers.SimpleRouter(trailing_slash=False)
 simple_router.register('users', UsersViewSet, base_name='users')

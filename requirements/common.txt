@@ -53,3 +53,5 @@ celery[redis]==4.2.1
 # -------------------------------------
 PyJWT==1.6.4
 django-mail-templated==2.6.5
+
+pandas

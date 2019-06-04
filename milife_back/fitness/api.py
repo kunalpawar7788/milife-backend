@@ -1,7 +1,9 @@
+from rest_framework.views import APIView
 from rest_framework import viewsets, parsers, filters
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
 from milife_back.base import response, mixins
 from milife_back.permissions import NestedUserPermission
@@ -173,24 +175,12 @@ class ClientDashboardViewSet(viewsets.GenericViewSet):
         return response.Ok(serializer.data)
 
 
-# class ProgressReportViewSet(viewsets.GenericViewSet):
-#     serializer_class = serializers.ProgressReportDetailSerializer
-#     permission_classes = (AllowAny, )
-
-#     def retrieve(self, *args, **kwargs):
-#         user_pk = self.kwargs['pk']
-#         client = get_user_model().objects.get(id=user_pk)
-#         progress_reports = models.Checkin.objects.filter(user=user)
-
-#         serializer = self.serializer_class(progress_reports, many=True)
-#         return response.Ok(serializer.data)
-
 class ProgressReportViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.ProgressReportDetailSerializer
     queryset = models.Checkin.objects.all()
     permission_classes = (NestedUserPermission, )
     lookup_field = "date_of_checkin"
-
+    http_method_names = ['get', 'head']
 
     def get_serializer_context(self, ):
         super_context = super().get_serializer_context()
@@ -198,6 +188,22 @@ class ProgressReportViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
         client = get_user_model().objects.get(id=user_pk)
         context = {
             'user': client
+        }
+        super_context.update(context)
+        return super_context
+
+
+class AccuniqDataViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.AccuniqDataSerializer
+    queryset = models.AccuniqData.objects.all()
+    permission_classes = (IsAdminUser, )
+
+    def get_serializer_context(self, ):
+        super_context = super().get_serializer_context()
+        # user_pk = self.kwargs['user_pk']
+        # client = get_user_model().objects.get(id=user_pk)
+        context = {
+            'uploaded_by': self.request.user
         }
         super_context.update(context)
         return super_context
