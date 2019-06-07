@@ -185,30 +185,34 @@ class ProgressReportDetailSerializer(serializers.ModelSerializer):
         return round(100*(float(n)/float(d)), 1)
 
     def get_body_fat(self, obj):
-        return float(obj.accuniq_data['mbf_quantity'])/10
+        return float(obj.accuniq_data.get('mbf_quantity',0))/10
 
     def get_visceral_fat_mass(self, obj):
-        return float(obj.accuniq_data['vfa'])/10
+        return float(obj.accuniq_data.get('vfa',0))/10
 
     def get_body_type(self, obj):
-        return int(obj.accuniq_data['fat_type'])
+        return int(obj.accuniq_data.get('fat_type',0))
 
     def get_biological_age(self, obj):
-        return obj.accuniq_data['body_age']
+        return obj.accuniq_data.get('body_age', 0)
 
     def get_body_mass_index(self, obj):
-        return float(obj.accuniq_data['bmi'])/10
+        return float(obj.accuniq_data.get('bmi',0))/10
 
     def get_waist_hip_ratio(self, obj):
-        return float(obj.accuniq_data['whr_rate'])/10
+        return float(obj.accuniq_data.get('whr_rate', 0))/10
 
     def get_muscle_mass(self, obj):
-        return float(obj.accuniq_data['muscle_quantity'])/10
+        return float(obj.accuniq_data.get('muscle_quantity',0))/10
 
     def get_percentage_body_fat(self, obj):
+        if not obj.accuniq_data:
+            return 0
         return self._percentage(obj.accuniq_data['mbf_quantity'], obj.accuniq_data['weight'])
 
     def get_percentage_muscle_mass(self, obj):
+        if not obj.accuniq_data:
+            return 0
         return self._percentage(obj.accuniq_data['muscle_quantity'], obj.accuniq_data['weight'])
 
     def get_month(self, obj):
