@@ -10,6 +10,13 @@ from milife_back.permissions import NestedUserPermission
 from . import models, serializers
 from django.contrib.auth import get_user_model
 
+from rest_framework_bulk import (
+    BulkModelViewSet,
+    BulkListSerializer,
+    BulkSerializerMixin,
+    ListBulkCreateUpdateDestroyAPIView,
+)
+
 import uuid
 
 
@@ -26,6 +33,29 @@ class NestedProgrammeQuerysetMixin(object):
         if pk:
             return self.queryset.filter(programme=str(pk))
         return self.queryset
+
+
+"""
+class FooSerializer(BulkSerializerMixin, ModelSerializer):
+    class Meta(object):
+        model = FooModel
+        # only necessary in DRF3
+        list_serializer_class = BulkListSerializer
+
+class FooView(ListBulkCreateUpdateDestroyAPIView):
+    queryset = FooModel.objects.all()
+    serializer_class = FooSerializer
+"""
+
+class BulkWeightViewSet(BulkModelViewSet):
+    queryset = models.Weight.objects.all()
+    serializer_class = serializers.BulkWeightSerializer
+    permission_classes = (IsAdminUser, )
+
+class BulkTargetWeightViewSet(BulkModelViewSet):
+    queryset = models.TargetWeight.objects.all()
+    serializer_class = serializers.BulkTargetWeightSerializer
+    permission_classes = (IsAdminUser, )
 
 
 class WeightViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):

@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework_bulk import BulkListSerializer, BulkSerializerMixin
+
 from . import models
 
 class ProgrammeSerializer(serializers.ModelSerializer):
@@ -17,6 +19,21 @@ class WeightSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Weight
         exclude = ('user', 'created_at', 'modified_at')
+
+
+class BulkWeightSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+    class Meta:
+        model=models.Weight
+        list_serializer_class = BulkListSerializer
+        fields = ('user', 'weight', 'measured_on')
+
+
+class BulkTargetWeightSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+    class Meta:
+        model=models.TargetWeight
+        list_serializer_class = BulkListSerializer
+        fields = ('user', 'target_weight', 'target_date')
+
 
 class TargetWeightSerializer(serializers.ModelSerializer):
     def create(self, validated_data):

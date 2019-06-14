@@ -55,3 +55,4 @@ PyJWT==1.6.4
 django-mail-templated==2.6.5
 
 pandas
+djangorestframework-bulk

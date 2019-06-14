@@ -12,12 +12,13 @@ from milife_back.fitness.api import (
     ProgrammeViewSet, WeightViewSet, CheckinViewSet, HolidayViewSet,
     SessionLedgerViewSet, TargetWeightViewSet, MessageViewSet,
     MealPlanViewSet, ClientDashboardViewSet, ProgressReportViewSet,
-    AccuniqDataViewSet,
+    AccuniqDataViewSet, BulkWeightViewSet, BulkTargetWeightViewSet,
 )
+from rest_framework_bulk.routes import BulkRouter
 
 default_router = DefaultRouter()
 singleton_router = SingletonRouter()
-
+bulk_router = BulkRouter()
 
 # Register all the django rest framework viewsets below.
 default_router.register('auth', AuthViewSet, base_name='auth')
@@ -57,6 +58,8 @@ nested_programme_router.register('session-ledger', SessionLedgerViewSet, base_na
 default_router.register('schedule', ScheduleViewSet, base_name='schedule')
 default_router.register('weight', WeightViewSet, base_name='weight')
 
+bulk_router.register('bulk-weights', BulkWeightViewSet)
+bulk_router.register('bulk-target-weights', BulkTargetWeightViewSet)
 
 # nested_simple_router = router.NestedSimpleRouter(trailing_slash=False)
 # default_router.register('users/{pk}/documents', DocumentsViewSet, base_name="user_documents")6
@@ -67,5 +70,5 @@ nested_user_router.register('weight', WeightViewSet, base_name='user_weight')
 
 # Combine urls from both default and singleton routers and expose as
 # 'urlpatterns' which django can pick up from this module.
-urlpatterns = default_router.urls + singleton_router.urls + simple_router.urls + nested_user_router.urls + nested_programme_router.urls + nested_programme_router2.urls
+urlpatterns = default_router.urls + singleton_router.urls + simple_router.urls + nested_user_router.urls + nested_programme_router.urls + nested_programme_router2.urls + bulk_router.urls
 
