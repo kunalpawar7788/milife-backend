@@ -35,18 +35,6 @@ class NestedProgrammeQuerysetMixin(object):
         return self.queryset
 
 
-"""
-class FooSerializer(BulkSerializerMixin, ModelSerializer):
-    class Meta(object):
-        model = FooModel
-        # only necessary in DRF3
-        list_serializer_class = BulkListSerializer
-
-class FooView(ListBulkCreateUpdateDestroyAPIView):
-    queryset = FooModel.objects.all()
-    serializer_class = FooSerializer
-"""
-
 class BulkWeightViewSet(BulkModelViewSet):
     queryset = models.Weight.objects.all()
     serializer_class = serializers.BulkWeightSerializer
@@ -125,7 +113,7 @@ class MessageViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
         return super_context
 
 
-class MealPlanViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
+class MealPlanViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MealPlanSerializer
     queryset = models.MealPlan.objects.all()
     permission_classes = (NestedUserPermission, )
@@ -159,20 +147,6 @@ class CheckinViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
         return super_context
 
 
-    # @permission_classes((IsAdminUser,))
-    # def create(self, request, user_pk):
-    #     client = get_user_model().objects.get(id=user_pk)
-    #     data = dict(**request.data)
-    #     data['user'] = uuid.UUID(str(client.id))
-
-    #     serializer = self.serializer_class(data=data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #     else:
-    #         print(serializer.errors)
-    #     return response.Created()
-
-
 class ClientDashboardViewSet(viewsets.GenericViewSet):
     serializer_class = serializers.ClientDashboardSerializer
     permission_classes = (AllowAny, )
@@ -200,6 +174,23 @@ class ClientDashboardViewSet(viewsets.GenericViewSet):
             "calorie": calorie,
             "messages_count": models.Message.objects.filter(recipient=client, read=False).count(),
             "programme": programme
+        }
+        serializer = self.serializer_class(instance=context)
+        return response.Ok(serializer.data)
+
+
+class WeightChartViewSet(viewsets.GenericViewSet):
+    serializer_class = serializers.WeightChartSerializer
+    permission_classes = (AllowAny, )
+
+    def list(self, *args, **kwargs):
+        user_pk = self.kwargs['user_pk']
+        client = get_user_model().objects.get(id=user_pk)
+        weight_queryset = models.Weight.objects.filter(user=client)
+
+        context = {
+            "weight_log": list(weight_queryset),
+            "target_weight": models.TargetWeight.objects.filter(user=client),
         }
         serializer = self.serializer_class(instance=context)
         return response.Ok(serializer.data)

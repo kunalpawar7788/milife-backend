@@ -247,3 +247,8 @@ class  AccuniqDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AccuniqData
         exclude = ('uploaded_by',)
+
+
+class WeightChartSerializer(serializers.Serializer):
+    weight_log = WeightSerializer(many=True)
+    target_weight = TargetWeightSerializer(many=True)
