@@ -57,7 +57,8 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Message
-        fields = ('kind', 'content', 'read', 'deleted')
+        fields = ('kind', 'content', 'read', 'deleted', 'created_at', 'modified_at')
+        read_only_fields = ('created_at', 'modified_at',)
 
 class MealPlanSerializer(serializers.ModelSerializer):
     def create(self, validated_data):

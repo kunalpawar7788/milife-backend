@@ -5,6 +5,9 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
+from django_filters.rest_framework import DjangoFilterBackend
+
+
 from milife_back.base import response, mixins
 from milife_back.permissions import NestedUserPermission
 from . import models, serializers
@@ -96,10 +99,19 @@ class SessionLedgerViewSet(NestedProgrammeQuerysetMixin, viewsets.ModelViewSet):
     permission_classes = ()
 
 
-class MessageViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
+class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MessageSerializer
     queryset = models.Message.objects.all()
     permission_classes = (NestedUserPermission,)
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
+    search_fields = ('kind', 'read', 'deleted' )
+    ordering_fields = ('created_at', )
+
+    def get_queryset(self):
+        user_pk = self.kwargs.get('user_pk')
+        if user_pk:
+            return self.queryset.filter(recipient=str(user_pk))
+        return self.queryset
 
     def get_serializer_context(self, ):
         super_context = super().get_serializer_context()
