@@ -129,15 +129,19 @@ class ProgressReportSummarySerializer(serializers.ModelSerializer):
         return round(100*(float(n)/float(d)), 1)
 
     def get_body_fat(self, obj):
-        return float(obj.accuniq_data['mbf_quantity'])/10
+        return float(obj.accuniq_data.get('mbf_quantity',0))/10
 
     def get_muscle_mass(self, obj):
-        return float(obj.accuniq_data['muscle_quantity'])/10
+        return float(obj.accuniq_data.get('muscle_quantity',0))/10
 
     def get_percentage_body_fat(self, obj):
+        if not obj.accuniq_data:
+            return 0
         return self._percentage(obj.accuniq_data['mbf_quantity'], obj.accuniq_data['weight'])
 
     def get_percentage_muscle_mass(self, obj):
+        if not obj.accuniq_data:
+            return 0
         return self._percentage(obj.accuniq_data['muscle_quantity'], obj.accuniq_data['weight'])
 
     def get_month(self, obj):
