@@ -57,8 +57,8 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Message
-        fields = ('kind', 'content', 'read', 'deleted', 'created_at', 'modified_at')
-        read_only_fields = ('created_at', 'modified_at',)
+        fields = ('kind', 'content', 'read', 'deleted', 'created_at', 'modified_at', 'id')
+        read_only_fields = ('created_at', 'modified_at', 'id')
 
 class MealPlanSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
@@ -84,7 +84,6 @@ class CheckinSerializer(serializers.ModelSerializer):
         model = models.Checkin
         exclude = ('accuniq_timestamp', 'accuniq_data', 'user')
 
-
 class HolidaySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Holiday
@@ -103,6 +102,8 @@ class ProgressReportSerializer(serializers.ModelSerializer):
     percentage_body_fat: {pbf_rate, pbf_min_limit, pbf_low_limit, pbf_top_limit, pbf_topmax_limit, pbf_max_limit},
     muscle_mass: {muscle_quantity, muscle_low_limit, muscle_standard , muscle_top_limit}
     """
+    comment = MessageSerializer(read_only=True)
+
     class Meta:
         model = models.Checkin
         fields = '__all__'
@@ -170,6 +171,7 @@ class ProgressReportDetailSerializer(serializers.ModelSerializer):
     waist_hip_ratio = serializers.SerializerMethodField()
 
     month = serializers.SerializerMethodField()
+    comment = MessageSerializer(read_only=True)
 
     class Meta:
         model = models.Checkin
@@ -201,6 +203,8 @@ class ProgressReportDetailSerializer(serializers.ModelSerializer):
                   'right_leg',
                   'photo_front_profile',
                   'photo_side_profile',
+
+                  'comment',
         )
 
     def _percentage(self, n, d):

@@ -102,7 +102,7 @@ class SessionLedgerViewSet(NestedProgrammeQuerysetMixin, viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MessageSerializer
     queryset = models.Message.objects.all()
-    permission_classes = (NestedUserPermission,)
+    #permission_classes = (NestedUserPermission,)
     filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
     search_fields = ('kind', 'read', 'deleted' )
     ordering_fields = ('created_at', )
@@ -145,6 +145,8 @@ class CheckinViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     parsers = (parsers.FileUploadParser, )
     serializer_class = serializers.CheckinSerializer
     queryset = models.Checkin.objects.all()
+    filter_backends = (filters.OrderingFilter, )
+    ordering_fields = ('created_at', )
     lookup_field = "date_of_checkin"
 
 
