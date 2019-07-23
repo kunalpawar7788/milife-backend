@@ -50,7 +50,7 @@ class CoachesViewSet(viewsets.ModelViewSet):
     queryset = models.User.objects.filter(is_active=True, is_staff=True)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('first_name', 'last_name')
-    permission_classes = (UsersPermission, )
+    #permission_classes = (UsersPermission, )
 
 
 class UserCountViewSet(viewsets.GenericViewSet):
