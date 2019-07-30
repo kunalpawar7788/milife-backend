@@ -17,6 +17,9 @@ def populate_checkin_from_accuniq_data(accuniq_data_id):
     keys = list(map(str.strip, lines[0].split(',')))
 
     for row in lines[1:]:
+        if len(row.strip()) == 0:
+            continue
+
         values = list(map(str.strip, row.split(',')))
         record = dict(zip(keys, values))
 
