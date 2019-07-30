@@ -24,6 +24,7 @@ def populate_checkin_from_accuniq_data(accuniq_data_id):
             user = User.objects.get(accuniq_id=record['id_number'])
         except User.DoesNotExist:
             user = None
+            continue
 
         date_str = str(record['received_date'])
 
