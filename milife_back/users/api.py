@@ -46,7 +46,7 @@ class UsersViewSet(viewsets.ModelViewSet):
 
 class CoachesViewSet(viewsets.ModelViewSet):
     """powers admin interface."""
-    serializer_class = serializers.UserSerializer
+    serializer_class = serializers.CoachSerializer
     queryset = models.User.objects.filter(is_active=True, is_staff=True)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('first_name', 'last_name')

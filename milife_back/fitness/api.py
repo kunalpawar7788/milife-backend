@@ -99,13 +99,37 @@ class SessionLedgerViewSet(NestedProgrammeQuerysetMixin, viewsets.ModelViewSet):
     permission_classes = ()
 
 
+from rest_framework import generics
+from django_filters import rest_framework as drf_filters
+from django.core.validators import EMPTY_VALUES
+
+class EmptyStringFilter(drf_filters.BooleanFilter):
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES:
+            return qs
+
+        exclude = self.exclude ^ (value is False)
+        method = qs.exclude if exclude else qs.filter
+
+        return method(**{self.field_name: ""})
+
+class MessageFilter(drf_filters.FilterSet):
+    content_isempty = EmptyStringFilter(field_name="content")
+
+    class Meta:
+        model = models.Message
+        fields = ['kind', 'read', 'deleted',]
+
+
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MessageSerializer
     queryset = models.Message.objects.all()
     #permission_classes = (NestedUserPermission,)
     filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
-    search_fields = ('kind', 'read', 'deleted' )
+    search_fields = ('content' )
     ordering_fields = ('created_at', )
+    # filterset_fields = ('kind', 'read', 'deleted',)
+    filter_class = MessageFilter
 
     def get_queryset(self):
         user_pk = self.kwargs.get('user_pk')
@@ -125,7 +149,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         return super_context
 
 
-class MealPlanViewSet(viewsets.ModelViewSet):
+class MealPlanViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.MealPlanSerializer
     queryset = models.MealPlan.objects.all()
     permission_classes = (NestedUserPermission, )
@@ -169,6 +193,7 @@ class ClientDashboardViewSet(viewsets.GenericViewSet):
         user_pk = self.kwargs['pk']
         client = get_user_model().objects.get(id=user_pk)
         weight_queryset = models.Weight.objects.filter(user=client)
+        messages_count = models.Message.objects.filter(recipient=client, read=False).exclude(content='').count()
         try:
             meal_plan = models.MealPlan.objects.get(user=client)
         except models.MealPlan.DoesNotExist:
@@ -186,7 +211,7 @@ class ClientDashboardViewSet(viewsets.GenericViewSet):
             "target_weight": models.TargetWeight.objects.filter(user=client),
             "progress_report": models.Checkin.objects.filter(user=client).order_by('-date_of_checkin')[:2],
             "calorie": calorie,
-            "messages_count": models.Message.objects.filter(recipient=client, read=False).count(),
+            "messages_count": messages_count,
             "programme": programme
         }
         serializer = self.serializer_class(instance=context)

@@ -16,7 +16,7 @@ def create_message_for_checkin(sender, instance, raw, using, update_fields, **kw
         return
     message = models.Message.objects.create(
         recipient = instance.user,
-        sender = User.objects.all()[0],
+        sender = User.objects.filter(is_staff=True)[0],
         kind = "checkin-commentry",
         content = "",
         deleted=True,

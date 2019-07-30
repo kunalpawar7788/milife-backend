@@ -52,3 +52,9 @@ class UserSerializer(serializers.ModelSerializer):
                   'gender', 'number', 'invited',
         ]
 
+class CoachSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        fields = ['id', 'first_name', 'last_name', 'email',
+                  'image', 'gender', 'number'
+        ]

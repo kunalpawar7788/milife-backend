@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework_bulk import BulkListSerializer, BulkSerializerMixin
 
 from . import models
-
+from ..users.serializers import CoachSerializer
 class ProgrammeSerializer(serializers.ModelSerializer):
     sessions = serializers.JSONField(required=False)
 
@@ -48,6 +48,8 @@ class TargetWeightSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    sender = CoachSerializer(read_only=True)
+
     def create(self, validated_data):
         return models.Message.objects.create(
             sender = self.context['sender'],
@@ -55,9 +57,16 @@ class MessageSerializer(serializers.ModelSerializer):
             **validated_data
         )
 
+    def update(self, instance, validated_data):
+        print(self.context['sender'], instance.sender)
+        if self.context['sender'].is_staff:
+            instance.sender = self.context['sender']
+            # instance.save()
+        return super(MessageSerializer, self).update(instance, validated_data)
+
     class Meta:
         model = models.Message
-        fields = ('kind', 'content', 'read', 'deleted', 'created_at', 'modified_at', 'id')
+        fields = ('kind', 'content', 'read', 'deleted', 'created_at', 'modified_at', 'id', 'sender')
         read_only_fields = ('created_at', 'modified_at', 'id')
 
 class MealPlanSerializer(serializers.ModelSerializer):
