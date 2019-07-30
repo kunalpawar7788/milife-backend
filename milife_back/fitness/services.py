@@ -1,4 +1,3 @@
-import pandas as pd
 
 ## from datetime import timezone
 from django.utils.dateparse import parse_datetime
@@ -7,17 +6,19 @@ from milife_back.fitness.models import Checkin, AccuniqData
 from milife_back.users.models import User
 
 from datetime import datetime
-import pandas as pd
 import pytz
 
 def populate_checkin_from_accuniq_data(accuniq_data_id):
     obj = AccuniqData.objects.get(id=accuniq_data_id)
-    df = pd.read_csv(obj.csvfile)
-    df.rename(columns=df.iloc[0]).drop(df.index[0])
-    records = df.to_dict('index')
-    records_count = len(df)
-    for key in records:
-        record = records[key]
+    f = obj.csvfile.file
+    f.seek(0)
+    data = f.read().decode('utf-8')
+    lines = data.split('\n')
+    keys = list(map(str.strip, lines[0].split(',')))
+
+    for row in lines[1:]:
+        values = list(map(str.strip, row.split(',')))
+        record = dict(zip(keys, values))
 
         try:
             user = User.objects.get(accuniq_id=record['id_number'])
@@ -43,5 +44,3 @@ def populate_checkin_from_accuniq_data(accuniq_data_id):
                 checkin.accuniq_data = record
                 checkin.date_of_checkin = localized.date()
             checkin.save()
-
-
