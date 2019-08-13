@@ -170,7 +170,7 @@ class CheckinViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.CheckinSerializer
     queryset = models.Checkin.objects.all()
     filter_backends = (filters.OrderingFilter, )
-    ordering_fields = ('created_at', )
+    ordering_fields = ('date_of_checkin', )
     lookup_field = "date_of_checkin"
 
 
