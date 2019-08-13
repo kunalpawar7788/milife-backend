@@ -38,12 +38,12 @@ def populate_checkin_from_accuniq_data(accuniq_data_id):
         try:
             checkin, created = Checkin.objects.get_or_create(
                 accuniq_timestamp = localized,
-                accuniq_id = record['id_number']
+                accuniq_id = record['id_number'],
+                user=user
             )
         except Exception as e:
             print(e)
         else:
-            checkin.user = user
             if created:
                 checkin.accuniq_data = record
                 checkin.date_of_checkin = localized.date()
