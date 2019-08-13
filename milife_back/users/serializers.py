@@ -52,7 +52,6 @@ class PPOIField(serializers.Field):
 
 class UserSerializer(serializers.ModelSerializer):
     date_of_birth = serializers.DateField(format="%Y-%m-%d")
-    image_poi = PPOIField()
 
     class Meta:
         model = models.User
@@ -60,7 +59,7 @@ class UserSerializer(serializers.ModelSerializer):
                   'is_active', 'is_staff', 'email_verified',
                   'weight_kg', 'height_cm', 'height_unit',
                   'weight_unit', 'date_of_birth', 'image',
-                  'gender', 'number', 'invited', 'image_poi',
+                  'gender', 'number', 'invited',
         ]
 
 
