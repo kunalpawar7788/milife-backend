@@ -194,6 +194,7 @@ class ClientDashboardViewSet(viewsets.GenericViewSet):
         client = get_user_model().objects.get(id=user_pk)
         weight_queryset = models.Weight.objects.filter(user=client)
         messages_count = models.Message.objects.filter(recipient=client, read=False).exclude(content='').count()
+        first_checkin = models.Checkin.objects.filter(user=client).order_by('date_of_checkin')[0]
         try:
             meal_plan = models.MealPlan.objects.get(user=client)
         except models.MealPlan.DoesNotExist:
@@ -212,7 +213,8 @@ class ClientDashboardViewSet(viewsets.GenericViewSet):
             "progress_report": models.Checkin.objects.filter(user=client).order_by('-date_of_checkin')[:2],
             "calorie": calorie,
             "messages_count": messages_count,
-            "programme": programme
+            "programme": programme,
+            "first_checkin": first_checkin
         }
         serializer = self.serializer_class(instance=context)
         return response.Ok(serializer.data)

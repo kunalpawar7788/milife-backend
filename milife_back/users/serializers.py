@@ -41,16 +41,28 @@ class HeightFeetField(serializers.Field):
         cm = int(feet)*30.48 + int(float(inches))*2.54
         return cm
 
+class PPOIField(serializers.Field):
+    """
+    """
+    def to_representation(self, value):
+        return "{}x{}".format(*value)
+
+    def to_internal_value(self, data):
+        return data
+
 class UserSerializer(serializers.ModelSerializer):
     date_of_birth = serializers.DateField(format="%Y-%m-%d")
+    image_poi = PPOIField()
+
     class Meta:
         model = models.User
         fields = ['id', 'first_name', 'last_name', 'email',
                   'is_active', 'is_staff', 'email_verified',
                   'weight_kg', 'height_cm', 'height_unit',
                   'weight_unit', 'date_of_birth', 'image',
-                  'gender', 'number', 'invited',
+                  'gender', 'number', 'invited', 'image_poi',
         ]
+
 
 class CoachSerializer(serializers.ModelSerializer):
     class Meta:

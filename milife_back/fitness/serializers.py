@@ -166,6 +166,7 @@ class ClientDashboardSerializer(serializers.Serializer):
     messages_count = serializers.IntegerField()
     progress_report = ProgressReportSummarySerializer(many=True)
     programme = ProgrammeSerializer()
+    first_checkin = CheckinSerializer()
 
 
 class ProgressReportDetailSerializer(serializers.ModelSerializer):
