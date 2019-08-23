@@ -236,7 +236,7 @@ class ProgressReportDetailSerializer(serializers.ModelSerializer):
         return float(obj.accuniq_data.get('bmi',0))/10
 
     def get_waist_hip_ratio(self, obj):
-        return float(obj.accuniq_data.get('whr_rate', 0))/10
+        return float(obj.accuniq_data.get('whr_rate', 0))/100
 
     def get_muscle_mass(self, obj):
         return float(obj.accuniq_data.get('muscle_quantity',0))/10
