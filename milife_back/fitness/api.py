@@ -258,6 +258,8 @@ class ProgressReportViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
 class AccuniqDataViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.AccuniqDataSerializer
     queryset = models.AccuniqData.objects.all()
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
+    ordering_fields = ('created_at', )
     permission_classes = (IsAdminUser, )
 
     def get_serializer_context(self, ):
