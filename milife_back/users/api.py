@@ -41,7 +41,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     search_fields = ('first_name', 'last_name')
     permission_classes = (UsersPermission, )
-    filterset_fields = ('email_verified',)
+    filterset_fields = ('email_verified', 'invited')
 
 
 class CoachesViewSet(viewsets.ModelViewSet):
