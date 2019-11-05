@@ -111,7 +111,7 @@ class HolidayViewSet(NestedProgrammeQuerysetMixin, viewsets.ModelViewSet):
 class PaginationWithAggregates(pagination.PageNumberPagination):
     def paginate_queryset(self, queryset, request, view=None):
         d = dict(queryset.values_list('kind').order_by('kind').annotate(count=Count('kind')))
-        self.balance = d['C'] - d['D']
+        self.balance = d.get('C',0) - d.get('D',0)
 
         return super(PaginationWithAggregates, self).paginate_queryset(queryset, request, view)
 
