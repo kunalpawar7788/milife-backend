@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework import viewsets, parsers, filters
+from rest_framework import viewsets, parsers, filters, pagination
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
@@ -12,6 +12,7 @@ from milife_back.base import response, mixins
 from milife_back.permissions import NestedUserPermission
 from . import models, serializers
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 
 from rest_framework_bulk import (
     BulkModelViewSet,
@@ -85,6 +86,10 @@ class ProgrammeViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.ProgrammeSerializer
     queryset = models.Programme.objects.all()
     permission_classes = ()
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
+    search_fields = ('name' )
+    ordering_fields = ('end_date', )
+    filterset_fields = ('active',)
 
 
 class HolidayViewSet(NestedProgrammeQuerysetMixin, viewsets.ModelViewSet):
@@ -92,11 +97,47 @@ class HolidayViewSet(NestedProgrammeQuerysetMixin, viewsets.ModelViewSet):
     queryset = models.Holiday.objects.all()
     permission_classes = ()
 
+    def get_serializer_context(self, ):
+        super_context = super().get_serializer_context()
+        programme_pk = self.kwargs['programme_pk']
+        programme = models.Programme.objects.get(id=programme_pk)
 
-class SessionLedgerViewSet(NestedProgrammeQuerysetMixin, viewsets.ModelViewSet):
-    serializer_class = serializers.SessionLedgerSerializer
-    queryset = models.SessionLedger.objects.all()
+        context = {
+            'programme': programme
+        }
+        super_context.update(context)
+        return super_context
+
+class PaginationWithAggregates(pagination.PageNumberPagination):
+    def paginate_queryset(self, queryset, request, view=None):
+        d = dict(queryset.values_list('kind').order_by('kind').annotate(count=Count('kind')))
+        self.balance = d['C'] - d['D']
+
+        return super(PaginationWithAggregates, self).paginate_queryset(queryset, request, view)
+
+    def get_paginated_response(self, data):
+        paginated_response = super(PaginationWithAggregates, self).get_paginated_response(data)
+        paginated_response.data['balance'] = self.balance
+        return paginated_response
+
+
+class LeaveLedgerViewSet(NestedProgrammeQuerysetMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.LeaveLedgerSerializer
+    queryset = models.LeaveLedger.objects.all()
     permission_classes = ()
+    pagination_class = PaginationWithAggregates
+
+    def get_serializer_context(self, ):
+        super_context = super().get_serializer_context()
+        programme_pk = self.kwargs['programme_pk']
+        programme = models.Programme.objects.get(id=programme_pk)
+
+        context = {
+            'programme': programme
+        }
+        super_context.update(context)
+        return super_context
+
 
 
 from rest_framework import generics

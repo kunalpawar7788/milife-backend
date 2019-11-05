@@ -22,3 +22,8 @@ def create_message_for_checkin(sender, instance, raw, using, update_fields, **kw
         deleted=True,
     )
     instance.comment = message
+
+@receiver(post_save, sender=models.Holiday)
+def extend_programme_end_date(sender, instance, created, **kwargs):
+    instance.programme.end_date=instance.programme_end_date;
+    instance.programme.save()

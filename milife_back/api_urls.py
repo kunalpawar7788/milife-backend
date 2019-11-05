@@ -10,7 +10,7 @@ from milife_back.documents.api import DocumentsViewSet
 from milife_back.schedule.api import ScheduleViewSet
 from milife_back.fitness.api import (
     ProgrammeViewSet, WeightViewSet, CheckinViewSet, HolidayViewSet,
-    SessionLedgerViewSet, TargetWeightViewSet, MessageViewSet,
+    LeaveLedgerViewSet, TargetWeightViewSet, MessageViewSet,
     MealPlanViewSet, ClientDashboardViewSet, ProgressReportViewSet,
     AccuniqDataViewSet, BulkWeightViewSet, BulkTargetWeightViewSet,
     WeightChartViewSet,
@@ -46,15 +46,16 @@ nested_user_router.register('message', MessageViewSet, base_name='user_message')
 nested_user_router.register('mealplan', MealPlanViewSet, base_name='user_message')
 nested_user_router.register('weight-chart', WeightChartViewSet, base_name='user_weight_chart')
 
+
 nested_user_router.register('progress-report', ProgressReportViewSet, base_name="user_progress_report")
 
 nested_programme_router2 = routers.NestedSimpleRouter(simple_router, r'programmes', lookup='programme')
 nested_programme_router2.register('holiday', HolidayViewSet, base_name="programme_holiday")
-nested_programme_router2.register('session-ledger', SessionLedgerViewSet, base_name='programme_session_ledger')
+nested_programme_router2.register('leave-ledger', LeaveLedgerViewSet, base_name='programme_leave_ledger')
 
 nested_programme_router = routers.NestedSimpleRouter(nested_user_router, r'programmes', lookup='programme')
 nested_programme_router.register('holiday', HolidayViewSet, base_name="programme_holiday")
-nested_programme_router.register('session-ledger', SessionLedgerViewSet, base_name='programme_session_ledger')
+nested_programme_router.register('leave-ledger', LeaveLedgerViewSet, base_name='programme_leave_ledger')
 
 
 default_router.register('schedule', ScheduleViewSet, base_name='schedule')

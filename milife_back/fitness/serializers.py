@@ -96,13 +96,24 @@ class CheckinSerializer(serializers.ModelSerializer):
 class HolidaySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Holiday
-        fields = '__all__'
+        exclude = ( 'programme', )
 
+    def create(self, validated_data):
+        return models.Holiday.objects.create(
+            programme = self.context['programme'],
+            **validated_data,
+        )
 
-class SessionLedgerSerializer(serializers.ModelSerializer):
+class LeaveLedgerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.SessionLedger
-        fields = '__all__'
+        model = models.LeaveLedger
+        exclude = ( 'programme', )
+
+    def create(self, validated_data):
+        return models.LeaveLedger.objects.create(
+            programme = self.context['programme'],
+            **validated_data,
+        )
 
 
 class ProgressReportSerializer(serializers.ModelSerializer):

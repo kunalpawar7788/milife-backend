@@ -19,25 +19,23 @@ class Programme(TimeStampedUUIDModel):
     active = models.BooleanField(_('Active'), default=True)
 
 
+
 class Holiday(TimeStampedUUIDModel):
-    EFFECT_ON_SCHEDULE_CHOICES = (
-        ('extend_programme', 'Extend Programme'),
-        ('bank_sessions', 'Bank Sessions'),
-    )
-    programme = models.ForeignKey(Programme, on_delete=models.PROTECT, related_name='holiday_programme')
+    programme = models.ForeignKey(Programme, on_delete=models.PROTECT, related_name='holiday2programme')
     start = models.DateField()
     end = models.DateField()
     comment= models.CharField(_("Comment"), max_length=200, blank=True)
+    programme_end_date = models.DateField()
 
 
-class SessionLedger(TimeStampedUUIDModel):
+class LeaveLedger(TimeStampedUUIDModel):
     TYPES = (
         ('C', 'CREDITED'),
         ('D', 'DEBITED')
     )
-    programme = models.ForeignKey(Programme, on_delete=models.PROTECT, related_name='sessionledger_programme')
-    start = models.DateTimeField()
-    comment = models.CharField(_("Comment"), max_length=200, blank=True)
+
+    programme = models.ForeignKey(Programme, on_delete=models.PROTECT, related_name='leaveledger2programme')
+    date = models.DateField()
     kind = models.CharField(_("credit/debit"), max_length=4, choices=TYPES)
 
 
