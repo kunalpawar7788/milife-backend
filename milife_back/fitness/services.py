@@ -8,8 +8,11 @@ from milife_back.users.models import User
 from datetime import datetime
 import pytz
 
-def populate_checkin_from_accuniq_data(accuniq_data_id):
-    obj = AccuniqData.objects.get(id=accuniq_data_id)
+def populate_checkin_from_accuniq_data(accuniq_data_id=None):
+    if accuniq_data_id:
+        obj = AccuniqData.objects.get(id=accuniq_data_id)
+    else:
+        obj = AccuniqData.objects.order_by('-created_at').first()
     f = obj.csvfile.file
     f.seek(0)
     data = f.read().decode('utf-8')
