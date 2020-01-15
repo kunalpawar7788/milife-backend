@@ -13,6 +13,10 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
         obj = AccuniqData.objects.get(id=accuniq_data_id)
     else:
         obj = AccuniqData.objects.order_by('-created_at').first()
+
+    if not obj:
+        return
+
     f = obj.csvfile.file
     f.seek(0)
     data = f.read().decode('utf-8')
@@ -25,9 +29,10 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
 
         values = list(map(str.strip, row.split(',')))
         record = dict(zip(keys, values))
+        id_number = record['id_number'].replace('"','')
 
         try:
-            user = User.objects.get(accuniq_id=record['id_number'])
+            user = User.objects.get(accuniq_id=id_number)
         except User.DoesNotExist:
             user = None
             continue
@@ -42,7 +47,7 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
         try:
             checkin, created = Checkin.objects.get_or_create(
                 accuniq_timestamp = localized,
-                accuniq_id = record['id_number'],
+                accuniq_id = id_number,
                 user=user
             )
         except Exception as e:
