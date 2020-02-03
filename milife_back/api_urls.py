@@ -13,7 +13,7 @@ from milife_back.fitness.api import (
     LeaveLedgerViewSet, TargetWeightViewSet, MessageViewSet,
     MealPlanViewSet, ClientDashboardViewSet, ProgressReportViewSet,
     AccuniqDataViewSet, BulkWeightViewSet, BulkTargetWeightViewSet,
-    WeightChartViewSet,
+    WeightChartViewSet,CheckinDashboardViewSet,
 )
 from rest_framework_bulk.routes import BulkRouter
 
@@ -42,6 +42,7 @@ nested_user_router.register('schedule', ScheduleViewSet, base_name='user_schedul
 nested_user_router.register('weight', WeightViewSet, base_name='user_weight')
 nested_user_router.register('target-weights', TargetWeightViewSet, base_name='user_weight')
 nested_user_router.register('checkin', CheckinViewSet, base_name='user_checkin')
+nested_user_router.register('checkin-dash', CheckinDashboardViewSet, base_name='user_checkin_dashboard')
 nested_user_router.register('message', MessageViewSet, base_name='user_message')
 nested_user_router.register('mealplan', MealPlanViewSet, base_name='user_message')
 nested_user_router.register('weight-chart', WeightChartViewSet, base_name='user_weight_chart')

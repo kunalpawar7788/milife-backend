@@ -209,11 +209,10 @@ class MealPlanViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
 class CheckinViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     parsers = (parsers.FileUploadParser, )
     serializer_class = serializers.CheckinSerializer
-    queryset = models.Checkin.objects.all()
+    queryset = models.Checkin.objects.filter(deleted=False)
     filter_backends = (filters.OrderingFilter, )
     ordering_fields = ('date_of_checkin', )
     lookup_field = "date_of_checkin"
-
 
     def get_serializer_context(self, ):
         super_context = super().get_serializer_context()
@@ -224,6 +223,32 @@ class CheckinViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
         }
         super_context.update(context)
         return super_context
+
+
+class CheckinDashboardViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
+    serializer_class = serializers.CheckinSerializer
+    permission_classes = (IsAdminUser, )
+    queryset = models.Checkin.objects.all()
+    filter_backends = (filters.OrderingFilter, )
+    ordering_fields = ('date_of_checkin', )
+    lookup_field = "id"
+
+    def get_serializer_context(self, ):
+        super_context = super().get_serializer_context()
+        user_pk = self.kwargs['user_pk']
+        user = get_user_model().objects.get(id=user_pk)
+        context = {
+            'user_ref': user,
+        }
+        super_context.update(context)
+        return super_context
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return response.Ok(serializer.data)
 
 
 class ClientDashboardViewSet(viewsets.GenericViewSet):

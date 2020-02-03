@@ -94,6 +94,7 @@ class Checkin(TimeStampedUUIDModel):
     vo2_max = models.DecimalField(_("vo2_max"), max_digits=5, decimal_places=2, default=0)
     resting_heart_rate = models.IntegerField(_("resting heart rate"), default=0)
     comment = models.OneToOneField(Message, on_delete=models.PROTECT, related_name="comment_of", null=True)
+    deleted = models.BooleanField(_('Deleted'), default=False)
 
     class Meta:
         unique_together=(('accuniq_id', 'accuniq_timestamp'),)
