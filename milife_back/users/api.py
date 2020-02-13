@@ -37,11 +37,11 @@ class CurrentUserViewSet(viewsets.GenericViewSet):
 class UsersViewSet(viewsets.ModelViewSet):
     """powers admin interface."""
     serializer_class = serializers.UserSerializer
-    queryset = models.User.objects.filter(is_active=True)
+    queryset = models.User.objects.all()
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     search_fields = ('first_name', 'last_name')
     permission_classes = (UsersPermission, )
-    filterset_fields = ('email_verified', 'invited')
+    filterset_fields = ('email_verified', 'invited', 'is_active')
 
 
 class CoachesViewSet(viewsets.ModelViewSet):
