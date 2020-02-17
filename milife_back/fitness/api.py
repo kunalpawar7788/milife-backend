@@ -231,6 +231,7 @@ class CheckinDashboardViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     queryset = models.Checkin.objects.all()
     filter_backends = (filters.OrderingFilter, )
     ordering_fields = ('date_of_checkin', )
+    ordering = ('date_of_checkin', )
     lookup_field = "id"
 
     def get_serializer_context(self, ):
@@ -260,7 +261,7 @@ class ClientDashboardViewSet(viewsets.GenericViewSet):
         client = get_user_model().objects.get(id=user_pk)
         weight_queryset = models.Weight.objects.filter(user=client)
         messages_count = models.Message.objects.filter(recipient=client, read=False).exclude(content='').count()
-        first_checkin = models.Checkin.objects.filter(user=client).order_by('date_of_checkin')[0]
+        first_checkin = models.Checkin.objects.filter(user=client, deleted=False).order_by('date_of_checkin')[0]
         try:
             meal_plan = models.MealPlan.objects.get(user=client)
         except models.MealPlan.DoesNotExist:
@@ -276,7 +277,7 @@ class ClientDashboardViewSet(viewsets.GenericViewSet):
         context = {
             "weight_log": list(weight_queryset),
             "target_weight": models.TargetWeight.objects.filter(user=client),
-            "progress_report": models.Checkin.objects.filter(user=client).order_by('-date_of_checkin')[:2],
+            "progress_report": models.Checkin.objects.filter(user=client, deleted=False).order_by('-date_of_checkin')[:2],
             "calorie": calorie,
             "messages_count": messages_count,
             "programme": programme,
@@ -307,8 +308,11 @@ class ProgressReportViewSet(NestedUserQuerysetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.ProgressReportDetailSerializer
     queryset = models.Checkin.objects.all()
     permission_classes = (NestedUserPermission, )
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
     lookup_field = "date_of_checkin"
     http_method_names = ['get', 'head']
+    filterset_fields = ('deleted', )
+    ordering_fields = ('date_of_checkin', )
 
     def get_serializer_context(self, ):
         super_context = super().get_serializer_context()
