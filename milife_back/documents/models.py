@@ -11,7 +11,7 @@ class Document(TimeStampedUUIDModel):
         ('GUARANTEE', 'GUARANTEE'),
         ('MISC', 'MISC')
     )
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="trainee")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="trainee")
     document = models.FileField(_('Document'))
     name = models.CharField(_("Document's Name"), max_length=120, blank=True)
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="trainer")

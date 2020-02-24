@@ -10,7 +10,7 @@ from django.contrib.postgres.fields import JSONField
 from django.utils import timezone
 
 class Programme(TimeStampedUUIDModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="programme_user")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="programme_user")
     coach = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="programme_coach")
     name = models.CharField(_("Programme Name"), max_length=120)
     start_date = models.DateField()
@@ -21,7 +21,7 @@ class Programme(TimeStampedUUIDModel):
 
 
 class Holiday(TimeStampedUUIDModel):
-    programme = models.ForeignKey(Programme, on_delete=models.PROTECT, related_name='holiday2programme')
+    programme = models.ForeignKey(Programme, on_delete=models.CASCADE, related_name='holiday2programme')
     start = models.DateField()
     end = models.DateField()
     comment= models.CharField(_("Comment"), max_length=200, blank=True)
@@ -34,19 +34,19 @@ class LeaveLedger(TimeStampedUUIDModel):
         ('D', 'DEBITED')
     )
 
-    programme = models.ForeignKey(Programme, on_delete=models.PROTECT, related_name='leaveledger2programme')
+    programme = models.ForeignKey(Programme, on_delete=models.CASCADE, related_name='leaveledger2programme')
     date = models.DateField()
     kind = models.CharField(_("credit/debit"), max_length=4, choices=TYPES)
 
 
 class TargetWeight(TimeStampedUUIDModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="weight_user")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="weight_user")
     target_date = models.DateField(_("end_date"), default=timezone.now)
     target_weight = models.FloatField(_("Target Weight"), default=0)
 
 
 class Weight(TimeStampedUUIDModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="target_weight_user")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="target_weight_user")
     weight = models.FloatField(_("Weight"))
     measured_on = models.DateField(_("Measured on"), default=timezone.now)
 
@@ -57,7 +57,7 @@ class Message(TimeStampedUUIDModel):
         ('weekly-commentry', 'Weekly Commentry'),
         ('misc', 'MISCELLANEOUS')
     ]
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="message_recipient")
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="message_recipient")
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="message_sender")
     kind = models.CharField(_("Message type"), max_length=120, choices=MESSAGE_TYPES)
     read = models.BooleanField(_('Has been read by the recipient'), default=False)
@@ -66,7 +66,7 @@ class Message(TimeStampedUUIDModel):
 
 
 class Checkin(TimeStampedUUIDModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="checkin_user", blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="checkin_user", blank=True, null=True)
     accuniq_id = models.CharField(_("Accuniq Id"), max_length=21, default="")
 
     # use date_of_checkin for all calculation.
@@ -93,7 +93,7 @@ class Checkin(TimeStampedUUIDModel):
     blood_sugar = models.DecimalField(_("blood_sugar"), max_digits=5, decimal_places=2, default=0)
     vo2_max = models.DecimalField(_("vo2_max"), max_digits=5, decimal_places=2, default=0)
     resting_heart_rate = models.IntegerField(_("resting heart rate"), default=0)
-    comment = models.OneToOneField(Message, on_delete=models.PROTECT, related_name="comment_of", null=True)
+    comment = models.OneToOneField(Message, on_delete=models.CASCADE, related_name="comment_of", null=True)
     deleted = models.BooleanField(_('Deleted'), default=False)
 
     class Meta:
@@ -101,7 +101,7 @@ class Checkin(TimeStampedUUIDModel):
 
 
 class MealPlan(TimeStampedUUIDModel):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="mealplan_user")
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="mealplan_user")
     calorie = models.IntegerField(_("Calorie"), default=0)
     daily_breakup = JSONField(default=dict)
     meal_breakup = JSONField(default=list)
@@ -109,5 +109,5 @@ class MealPlan(TimeStampedUUIDModel):
 
 class AccuniqData(TimeStampedUUIDModel):
     csvfile = models.FileField(_("accuniq csvfile"), upload_to="accuniq")
-    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="accuniqdata_user")
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="accuniqdata_user")
 
