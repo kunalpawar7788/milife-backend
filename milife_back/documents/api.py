@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 
 from django.contrib.auth import get_user_model
+from django_filters.rest_framework import DjangoFilterBackend
 
 from milife_back.base import response, mixins
 from . import models, serializers
@@ -16,8 +17,9 @@ class DocumentsViewSet(mixins.NestedQuerysetMixin, viewsets.ModelViewSet):
     parsers = (parsers.FileUploadParser, )
     serializer_class = serializers.DocumentSerializer
     queryset = models.Document.objects.filter(deleted=False)
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     search_fields = ('name', 'notes')
-    filter_backends = (filters.SearchFilter,)
+    filterset_fields = ('kind',)
 
 
     def get_serializer_context(self, ):
