@@ -37,7 +37,7 @@ class CurrentUserViewSet(viewsets.GenericViewSet):
 class UsersViewSet(viewsets.ModelViewSet):
     """powers admin interface."""
     serializer_class = serializers.UserSerializer
-    queryset = models.User.objects.all()
+    queryset = models.User.objects.filter(is_staff=False)
     filter_backends = (filters.SearchFilter, DjangoFilterBackend)
     search_fields = ('first_name', 'last_name')
     permission_classes = (UsersPermission, )
