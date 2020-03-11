@@ -154,3 +154,7 @@ if not API_DEBUG:  # noqa: F405
     # blocking browsable api for rest framework and allowing just json renderer
     if 'rest_framework.renderers.BrowsableAPIRenderer' in REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES']:
         REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].remove('rest_framework.renderers.BrowsableAPIRenderer')
+
+
+# dj celery email
+INSTALLED_APPS += ("djcelery_email",)
