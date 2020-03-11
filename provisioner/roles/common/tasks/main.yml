@@ -35,10 +35,11 @@
         force=yes
         state=link
 
-- name: 'Add python3.6 (ppa:deadsnakes/ppa) repository'
+- name: 'Add python3.8 (ppa:deadsnakes/ppa) repository'
   apt_repository:
     repo: 'ppa:deadsnakes/ppa'
     update_cache: yes
+  when: False
 
 - name: update apt cache
   shell: apt update
@@ -68,7 +69,7 @@
 - name: apt_get install common packages
   apt: pkg={{ item }} state=present
   with_items: "{{base_ubuntu.common.apt_packages}}"
-
+  
 - name: ensure there is a group www-data
   group: name=www-data state=present system=yes
 

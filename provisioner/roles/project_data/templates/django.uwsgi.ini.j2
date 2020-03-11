@@ -11,9 +11,10 @@ buffer-size=8192
 home={{venv_path}}
 socket={{uwsgi_socket}}
 workers={{uwsgi_workers}}
+# http=127.0.0.1:8000
 # daemonize=/var/log/uwsgi/fueled.log
 log-x-forwarded-for=true
-plugins=python36
+plugins=python38
 
 # for newrelic support
 enable-threads=true

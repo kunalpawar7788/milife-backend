@@ -46,10 +46,25 @@ server {
         alias {{ project_path }}/_docs_html/;
     }
 
-    root /home/ubuntu/prod/milife-front/index.html;
+    root /home/ubuntu/prod/milife-front/;
+
+    location /(js|css) {
+
+      root /home/ubuntu/prod/milife-front/;
+    }
 
     location / {
       try_files $uri $uri/ /index.html;
+    }
+
+
+    location ~ (index.html|service-worker.js)$ {
+      add_header Last-Modified $date_gmt;
+      add_header Cache-Control 'no-cache, no-store, must-revalidate, proxy-revalidate, max-age=300';
+      if_modified_since off;
+      expires off;
+      proxy_no_cache 1;
+      etag off;
     }
 
 
@@ -60,6 +75,8 @@ server {
 
         # set correct scheme
         uwsgi_param UWSGI_SCHEME $http_x_forwarded_proto;
+
+        # proxy_pass http://localhost:8000;
     }
 
     location /static/ {
@@ -69,4 +86,5 @@ server {
     location /media/ {
         alias {{ project_path }}/.media/;
     }
+
 }

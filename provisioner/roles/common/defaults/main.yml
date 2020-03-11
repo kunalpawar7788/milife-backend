@@ -15,8 +15,18 @@ base_ubuntu:
       - htop
       - curl
       - python-dev
-      - python3.6
-      - python3.6-dev
+      - python3.8-dev
+      - libpython3-stdlib
+      - libpython3.8
+      - libpython3.8-minimal
+      - libpython3.8-stdlib
+      - python3
+      - python3-distutils
+      - python3-lib2to3
+      - python3-minimal
+      - python3.8
+      - python3.8-minimal
+      - python3.8-venv
       - python-setuptools
       - python-virtualenv
       - python-pip
@@ -32,4 +42,5 @@ base_ubuntu:
       - libpq-dev
       - postgis
       - ca-certificates
-
+      - gettext
+      - libgettextpo-dev

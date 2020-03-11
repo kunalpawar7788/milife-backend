@@ -18,7 +18,7 @@ pytz==2018.5
 
 # Models
 # -------------------------------------
-psycopg2-binary==2.7.5
+psycopg2-binary==2.8.4
 
 Pillow==5.3.0
 django-extensions==2.1.3

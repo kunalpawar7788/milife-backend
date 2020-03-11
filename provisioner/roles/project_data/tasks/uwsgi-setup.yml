@@ -10,17 +10,17 @@
     - libpcre3-dev
   tags: ['configure']
 
-# compile python36 plugin for uwsgi
+# compile python38 plugin for uwsgi
 # https://dev.to/pauloxnet/how-to-use-uwsgi-with-ptyhon36-in-ubuntu
-- name: python36 plugin | create build dir
+- name: python38 plugin | create build dir
   file: path=/usr/src/uwsgi/plugins/python state=directory owner={{user}} group={{uwsgi_group}} recurse=yes
   tags: ['configure']
 
-- name: compile python36 plugin for uwsgi
+- name: compile python38 plugin for uwsgi
   shell: >
-    PYTHON=python3.6 uwsgi --build-plugin "/usr/src/uwsgi/plugins/python python36" &&
-    mv python36_plugin.so /usr/lib/uwsgi/plugins/python36_plugin.so &&
-    chmod 644 /usr/lib/uwsgi/plugins/python36_plugin.so
+    PYTHON=python3.8 uwsgi --build-plugin "/usr/src/uwsgi/plugins/python python38" &&
+    mv python38_plugin.so /usr/lib/uwsgi/plugins/python38_plugin.so &&
+    chmod 644 /usr/lib/uwsgi/plugins/python38_plugin.so
 
 - name: make sure project directory is owned by uwsgi group
   file: path={{ project_path }} state=directory owner={{user}} group={{uwsgi_group}} recurse=yes

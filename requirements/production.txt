@@ -9,7 +9,7 @@ boto3==1.9.25
 
 # Caching
 # -------------------------------------
-django-redis==4.9.0
+django-redis==4.11.0
 hiredis==0.2.0
 
 
@@ -20,3 +20,4 @@ newrelic==4.4.1.104
 # Basic Auth Protection
 # -------------------------------------
 django-auth-wall==0.2.0
+django-celery-email==3.0.0
