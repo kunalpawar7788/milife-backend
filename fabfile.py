@@ -107,19 +107,17 @@ def createapp(appname):
 
 #  Enviroments & Deployments
 # ---------------------------------------------------------
-def dev():
-    env.host_group = 'dev'
+def staging():
+    env.host_group = 'staging'
     env.remote = 'origin'
-    env.branch = 'master'
-    env.hosts = ['dev.milife_back.com']
-    env.dotenv_path = '/home/ubuntu/dev/milife_back/.env'
+    env.hosts = ['staging.mi-life.co.uk']
+    env.dotenv_path = '/home/ubuntu/staging/milife_back/.env'
     env.config_setter = fab.run
 
 
 def qa():
     env.host_group = 'qa'
     env.remote = 'origin'
-    env.branch = 'qa'
     env.hosts = ['qa.milife_back.com']
     env.dotenv_path = '/home/ubuntu/qa/milife_back/.env'
     env.config_setter = fab.run
@@ -128,7 +126,6 @@ def qa():
 def prod():
     env.host_group = 'production'
     env.remote = 'origin'
-    env.branch = 'prod'
     env.hosts = ['prod.milife_back.com']
     env.dotenv_path = '/home/ubuntu/prod/milife_back/.env'
     env.config_setter = fab.run
@@ -160,23 +157,27 @@ def restart_servers():
         fab.sudo('systemctl restart {0}'.format(service))
 
 
-def configure(tags='', skip_tags='deploy'):
+def configure(tags='', skip_tags='deploy', branch='master', verbosity='vv'):
     """Setup a host using ansible scripts
 
     Usages: fab [prod|qa|dev] configure
     """
     fab.require('host_group')
+    env.verbosity = verbosity
+    env.branch = branch
     cmd = 'ansible-playbook -i hosts site.yml --limit=%(host_group)s' % env
     with fab.lcd('provisioner'):
         if tags:
             cmd += " --tags '%s'" % tags
         if skip_tags:
             cmd += " --skip-tags '%s'" % skip_tags
+        extra_vars = ' --extra-vars "repo_version=%s"' % branch
+        cmd += extra_vars
         local(cmd)
 
 
-def deploy():
-    configure(tags='deploy', skip_tags='')
+def deploy(branch='master'):
+    configure(tags='deploy', skip_tags='', branch=branch)
 
 
 def deploy_docs():

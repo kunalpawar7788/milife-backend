@@ -16,12 +16,13 @@ pg_user=vagrant
 pg_password=vagrant
 domain_name=vagrant.mi-life.co.uk
 
-[dev]
-dev.mi-life.co.uk
+[staging]
+staging.mi-life.co.uk
 
-[dev:vars]
+[staging:vars]
 vm=0
-deploy_environment=dev
+deploy_environment=staging
+ansible_user=ubuntu
 user=ubuntu
 project_namespace={{ project_name }}-{{ deploy_environment }}
 project_path=/home/ubuntu/{{ deploy_environment }}/milife-back
@@ -30,7 +31,7 @@ use_letsencrypt=True
 letsencrypt_email=lifeforcefitness@anuvrat.in
 django_requirements_file=requirements.txt
 django_settings="settings.production"
-domain_name=dev.mi-life.co.uk
+domain_name=staging.mi-life.co.uk
 
 
 [qa]
