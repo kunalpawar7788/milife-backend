@@ -75,6 +75,7 @@ class AuthViewSet(MultipleSerializerMixin, viewsets.GenericViewSet):
         serializer.is_valid(raise_exception=True)
         user = tokens.get_user_for_password_reset_token(serializer.validated_data['token'])
         user.set_password(serializer.validated_data['new_password'])
+        user.email_verified = True
         user.save()
         return response.NoContent()
 
