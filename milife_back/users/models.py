@@ -63,9 +63,12 @@ class User(AbstractBaseUser, UUIDModel, PermissionsMixin, ImageMixin):
 
     gender = models.CharField(_('Gender'), max_length=4, choices=GENDER_CHOICES, blank=True)
     height_cm = models.DecimalField(_('Height'), max_digits=5, decimal_places=2, blank=True, null=True)
-    height_unit = models.CharField(_('Height unit preference'), max_length=10, choices=HEIGHT_UNIT_CHOICES, blank=True)
+    height_unit = models.CharField(_('Height unit preference'), max_length=10,
+                               choices=HEIGHT_UNIT_CHOICES, blank=True, default='metric')
     weight_kg = models.DecimalField(_('Weight'), max_digits=5, decimal_places=2, blank=True, null=True)
-    weight_unit = models.CharField(_('Weight unit preference'), max_length=10, choices=WEIGHT_UNIT_CHOICES, blank=True)
+    weight_unit = models.CharField(_('Weight unit preference'), max_length=10,
+                               choices=WEIGHT_UNIT_CHOICES, blank=True, default='metric')
+
     date_of_birth = models.DateField(_('Date Of Birth'), null=True)
 
     USERNAME_FIELD = 'email'
