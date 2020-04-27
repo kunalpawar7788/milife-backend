@@ -35,6 +35,9 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
             user = User.objects.get(accuniq_id=id_number)
         except User.DoesNotExist:
             continue
+        except User.MultipleObjectsReturned:
+            print(id_number)
+            continue
 
         date_str = str(record['received_date'])
         if len(date_str)==9:
@@ -45,7 +48,7 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
 
         try:
             checkin, created = Checkin.objects.get_or_create(
-                accuniq_timestamp = localized,
+                date_of_checkin = localized.date(),
                 accuniq_id = id_number,
                 user=user
             )
@@ -54,5 +57,5 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
         else:
             if created:
                 checkin.accuniq_data = record
-                checkin.date_of_checkin = localized.date()
+                checkin.accuniq_timestamp = localized
             checkin.save()
