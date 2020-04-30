@@ -44,6 +44,7 @@ class BulkWeightViewSet(BulkModelViewSet):
     serializer_class = serializers.BulkWeightSerializer
     permission_classes = (IsAdminUser, )
 
+
 class BulkTargetWeightViewSet(BulkModelViewSet):
     queryset = models.TargetWeight.objects.all()
     serializer_class = serializers.BulkTargetWeightSerializer
