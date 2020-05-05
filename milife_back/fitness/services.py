@@ -49,13 +49,13 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
         try:
             checkin, created = Checkin.objects.get_or_create(
                 date_of_checkin = localized.date(),
-                accuniq_id = id_number,
                 user=user
             )
         except Exception as e:
             print(e)
         else:
-            if created:
+            if created or not checkin.accuniq_data:
+                checkin.accuniq_id = id_number
                 checkin.accuniq_data = record
                 checkin.accuniq_timestamp = localized
             checkin.save()
