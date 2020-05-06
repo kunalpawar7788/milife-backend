@@ -22,6 +22,17 @@ class WeightSerializer(serializers.ModelSerializer):
 
 
 class BulkWeightSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+    def create(self, validated_data):
+        weight, created = models.Weight.objects.get_or_create(
+            user=validated_data['user'],
+            measured_on=validated_data['measured_on'],
+        )
+
+        weight.weight = validated_data['weight']
+        weight.save()
+
+        return weight
+
     class Meta:
         model=models.Weight
         list_serializer_class = BulkListSerializer
@@ -29,6 +40,17 @@ class BulkWeightSerializer(BulkSerializerMixin, serializers.ModelSerializer):
 
 
 class BulkTargetWeightSerializer(BulkSerializerMixin, serializers.ModelSerializer):
+    def create(self, validated_data):
+        t_weight, created = models.TargetWeight.objects.get_or_create(
+            user=validated_data['user'],
+            target_date=validated_data['target_date'],
+        )
+
+        t_weight.target_weight = validated_data['target_weight']
+        t_weight.save()
+
+        return t_weight
+
     class Meta:
         model=models.TargetWeight
         list_serializer_class = BulkListSerializer

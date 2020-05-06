@@ -47,7 +47,7 @@ class TargetWeight(TimeStampedUUIDModel):
 
 class Weight(TimeStampedUUIDModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="target_weight_user")
-    weight = models.FloatField(_("Weight"))
+    weight = models.FloatField(_("Weight"), default=0)
     measured_on = models.DateField(_("Measured on"), default=timezone.now)
 
 
