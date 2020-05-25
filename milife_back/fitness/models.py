@@ -90,7 +90,7 @@ class Checkin(TimeStampedUUIDModel):
 
     systolic_blood_pressure = models.IntegerField(_("systolic_blood_pressure"), default=0)
     diastolic_blood_pressure = models.IntegerField(_("diastolic_blood_pressure"), default=0)
-    blood_sugar = models.DecimalField(_("blood_sugar"), max_digits=5, decimal_places=2, default=0)
+    blood_sugar = models.DecimalField(_("blood_sugar"), max_digits=5, decimal_places=1, default=0)
     vo2_max = models.IntegerField(_("vo2_max"), default=0)
     resting_heart_rate = models.IntegerField(_("resting heart rate"), default=0)
     comment = models.OneToOneField(Message, on_delete=models.CASCADE, related_name="comment_of", null=True)
