@@ -263,7 +263,7 @@ class ProgressReportDetailSerializer(serializers.ModelSerializer):
         return int(obj.accuniq_data.get('fat_type',0))
 
     def get_biological_age(self, obj):
-        return obj.accuniq_data.get('body_age', 0)
+        return int(obj.accuniq_data.get('body_age', 0))
 
     def get_body_mass_index(self, obj):
         return float(obj.accuniq_data.get('bmi',0))/10
