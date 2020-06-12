@@ -29,7 +29,7 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
 
         values = list(map(str.strip, row.split(',')))
         record = dict(zip(keys, values))
-        id_number = record['id_number'].replace('"','')
+        id_number = record['Id_Number'].replace('"','')
 
         try:
             user = User.objects.get(accuniq_id=id_number)
@@ -39,7 +39,7 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
             print(id_number)
             continue
 
-        date_str = str(record['received_date'])
+        date_str = str(record['Received_Date'])
         if len(date_str)==9:
             continue
         # date_str = f"0{date_str}" if len(date_str)==9 else date_str
