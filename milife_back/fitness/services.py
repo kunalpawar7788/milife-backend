@@ -20,7 +20,7 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
     f.seek(0)
     data = f.read().decode('utf-8')
     lines = data.split('\n')
-    keys = list((map(str.lower, map(str.strip, lines[0].split(',')))))
+    keys = list(map(str.lower, map(str.strip, lines[0].split(','))))
 
     for row in lines[1:]:
         if len(row.strip()) == 0:
