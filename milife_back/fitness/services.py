@@ -38,7 +38,7 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
             print(id_number)
             continue
 
-        date_str = str(record['received_rate'])
+        date_str = str(record['received_date'])
         if len(date_str)==9:
             continue
         # date_str = f"0{date_str}" if len(date_str)==9 else date_str
