@@ -86,7 +86,7 @@ if ENABLE_MEDIA_UPLOAD_TO_S3:
     AWS_QUERYSTRING_AUTH = env('DJANGO_AWS_QUERYSTRING_AUTH', default=False)
     AWS_S3_HOST = env('DJANGO_AWS_S3_HOST', default='')
     AWS_S3_REGION_NAME = env('DJANGO_AWS_S3_REGION_NAME', default=None)
-    AWS_S3_FILE_OVERWRITE=True
+    AWS_S3_FILE_OVERWRITE=False
     # ensures that objects uploaded to s3 are private.
     AWS_DEFAULT_ACL=None
 
