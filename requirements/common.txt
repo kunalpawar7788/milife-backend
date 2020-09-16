@@ -29,8 +29,8 @@ django-versatileimagefield==1.10
 # -------------------------------------
 djangorestframework==3.8.2
 django-rest-swagger==2.2.0
-drf-nested-routers
-django-extra-fields
+drf-nested-routers==0.91
+django-extra-fields==2.0.2
 django-filter==2.1.0
 
 # LOGGING
