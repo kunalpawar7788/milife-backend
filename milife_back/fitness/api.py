@@ -168,7 +168,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = models.Message.objects.all()
     #permission_classes = (NestedUserPermission,)
     filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
-    search_fields = ('content' )
+    search_fields = ('content', )
     ordering_fields = ('created_at', )
     # filterset_fields = ('kind', 'read', 'deleted',)
     filter_class = MessageFilter
