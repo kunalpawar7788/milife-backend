@@ -3,9 +3,11 @@ from django.utils.dateparse import parse_datetime
 import pytz
 from milife_back.fitness.models import Checkin, AccuniqData
 from milife_back.users.models import User
+from . import models
 
 from datetime import datetime
 import pytz
+
 
 def populate_checkin_from_accuniq_data(accuniq_data_id=None):
     if accuniq_data_id:
@@ -58,3 +60,29 @@ def populate_checkin_from_accuniq_data(accuniq_data_id=None):
                 checkin.accuniq_data = record
                 checkin.accuniq_timestamp = localized
             checkin.save()
+
+
+def remove_duplicate_date_weights(user, weight_data):
+    weight_records = models.Weight.objects.filter(
+        user=user,
+        measured_on=weight_data['measured_on'],
+    )
+    for record in weight_records:
+        record.delete()
+    return models.Weight.objects.create(
+        user = user,
+        **weight_data
+    )
+    
+
+def remove_duplicate_date_t_weights(user, weight_data):
+    weight_records = models.Weight.objects.filter(
+        user=user,
+        measured_on=weight_data['measured_on'],
+    )
+    for record in weight_records:
+        record.delete()
+    return models.TargetWeight.objects.create(
+        user = user,
+        **weight_data
+    )

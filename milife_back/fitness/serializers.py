@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_bulk import BulkListSerializer, BulkSerializerMixin
 
-from . import models
+from . import models, services
 from ..users.serializers import CoachSerializer
 class ProgrammeSerializer(serializers.ModelSerializer):
     sessions = serializers.JSONField(required=False)
@@ -12,10 +12,20 @@ class ProgrammeSerializer(serializers.ModelSerializer):
 
 class WeightSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        return models.Weight.objects.create(
-            user = self.context['user_ref'],
-            **validated_data
-        )
+        user = self.context['user_ref']
+        try:
+            weight, created = models.Weight.objects.get_or_create(
+                user=user,
+                measured_on=validated_data['measured_on'],
+            )
+        except models.Weight.MultipleObjectsReturned:
+            return services.remove_duplicate_date_weights(user, validated_data)
+
+        weight.weight = validated_data['weight']
+        weight.save()
+
+        return weight
+
     class Meta:
         model = models.Weight
         exclude = ('user', 'created_at', 'modified_at')
@@ -59,10 +69,19 @@ class BulkTargetWeightSerializer(BulkSerializerMixin, serializers.ModelSerialize
 
 class TargetWeightSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        return models.TargetWeight.objects.create(
-            user = self.context['user_ref'],
-            **validated_data
-        )
+        user = self.context['user_ref']
+        try:
+            t_weight, created = models.TargetWeight.objects.get_or_create(
+                user=user,
+                measured_on=validated_data['measured_on'],
+            )
+        except models.Weight.MultipleObjectsReturned:
+            return services.remove_duplicate_date_t_weights(user, validated_data)
+
+        t_weight.target_weight = validated_data['target_weight']
+        t_weight.save()
+
+        return t_weight
 
     class Meta:
         model = models.TargetWeight
