@@ -9,16 +9,18 @@
 {# ======== plain text version of email body #}
 {% blocktrans %}Hi {{ user.first_name }}!{% endblocktrans %}
 {% blocktrans %}
-Your mi-life account has been created using the email address {{ user.email }}.
+Your mi-life account has been created using the email address: {{ user.email }}
 {% endblocktrans %}
 
-{% trans "For the first step, please click on the "reset password" link to choose your own password:" %}
+{% trans "As a first step, please click on the "reset password" link to choose your own password:" %}
 
 {% resolve_frontend_url "password-confirm" token=token %}
 
 {% blocktrans %}
-We have set the account up with a password of "password". 
-Once you have reset your pasword you will be able to login with your new credentials.
+Once you have done this you will be able to log in with your new password.
+
+Enjoy the app!
+admin@mi-life
 {% endblocktrans %}
 {% endblock body %}
 
@@ -26,15 +28,17 @@ Once you have reset your pasword you will be able to login with your new credent
 {% block html %}
 {# ======== html version of email body #}
 <p>{% blocktrans %}Hi {{ user.first_name }}!{% endblocktrans %}</p>
-<p>{% blocktrans %}Your mi-life account has been created using the email address {{ user.email }}.{% endblocktrans %}</p>
+<p>{% blocktrans %}Your mi-life account has been created using the email address: {{ user.email }}{% endblocktrans %}</p>
 
-<p>{% trans "For the first step, please click on the "reset password" link to choose your own password:" %}
+<p>{% trans "As a first step, please click on the "reset password" link to choose your own password:" %}
 <a href="{% resolve_frontend_url "password-confirm" token=token %}">{% trans "Reset Password" %}</a>
 </p>
 
 <p>{% blocktrans %}
-We have set the account up with a password of "password". 
-Once you have reset your pasword you will be able to login with your new credentials.
+Once you have done this you will be able to log in with your new password.
+
+Enjoy the app!
+admin@mi-life
 {% endblocktrans %}</p>
 {% endblock html %}
 
