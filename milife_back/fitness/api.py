@@ -170,6 +170,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter)
     search_fields = ('content', )
     ordering_fields = ('created_at', )
+    ordering = ('-created_at', )
     # filterset_fields = ('kind', 'read', 'deleted',)
     filter_class = MessageFilter
 
