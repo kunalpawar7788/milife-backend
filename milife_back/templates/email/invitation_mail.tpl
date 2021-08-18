@@ -7,23 +7,38 @@
 
 {% block body %}
 {# ======== plain text version of email body #}
-{% blocktrans %}You have been invited to mi-life.co.uk.{% endblocktrans %}
+{% blocktrans %}Hi {{ user.first_name }}!{% endblocktrans %}
+{% blocktrans %}
+Your mi-life account has been created using the email address: {{ user.email }}
+{% endblocktrans %}
 
-{% trans "Please go to the following page and choose your password:" %}
+{% trans "As a first step, please click on the "reset password" link to choose your own password:" %}
 
 {% resolve_frontend_url "password-confirm" token=token %}
 
-{% trans "Thanks for using our site!" %}
+{% blocktrans %}
+Once you have done this you will be able to log in with your new password.
+
+Enjoy the app!
+admin@mi-life
+{% endblocktrans %}
 {% endblock body %}
 
 
 {% block html %}
 {# ======== html version of email body #}
-<p>{% blocktrans %}You've been invited to mi-life.co.uk{% endblocktrans %}</p>
+<p>{% blocktrans %}Hi {{ user.first_name }}!{% endblocktrans %}</p>
+<p>{% blocktrans %}Your mi-life account has been created using the email address: {{ user.email }}{% endblocktrans %}</p>
 
-<p>{% trans "Please go to the following page and choose your password:" %}
+<p>{% trans "As a first step, please click on the "reset password" link to choose your own password:" %}
 <a href="{% resolve_frontend_url "password-confirm" token=token %}">{% trans "Reset Password" %}</a>
 </p>
 
-<p>{% trans "Thanks!" %}</p>
+<p>{% blocktrans %}
+Once you have done this you will be able to log in with your new password.
+
+Enjoy the app!
+admin@mi-life
+{% endblocktrans %}</p>
 {% endblock html %}
+
