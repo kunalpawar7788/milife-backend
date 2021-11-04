@@ -184,7 +184,6 @@ MIDDLEWARE = [
 
 # DJANGO CORE
 # ------------------------------------------------------------------------------
-
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # Defaults to false, which is safe, enable them only in development.
 DEBUG = env.bool('DJANGO_DEBUG', False)
@@ -262,7 +261,7 @@ SERVER_EMAIL = env('SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://localhost/milife_back'),
+    'default': env.db('DATABASE_URL', default='postgres:///milife_back'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 DATABASES['default']['CONN_MAX_AGE'] = 10

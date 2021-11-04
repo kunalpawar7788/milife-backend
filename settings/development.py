@@ -9,6 +9,7 @@ Adds sensible defaults for developement of project
 - Enable livereloading
 """
 
+from os import access
 from .common import *  # noqa F405
 from .common import INSTALLED_APPS, env
 
@@ -34,6 +35,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", default='CHANGEME!!!')
 # cors
 # --------------------------------------------------------------------------
 CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST', default=['localhost', 'localhost:8000'])
+
 
 # Mail settings
 # ------------------------------------------------------------------------------
